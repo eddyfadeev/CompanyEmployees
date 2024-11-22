@@ -13,8 +13,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
 </Project>
