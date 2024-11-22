@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using CompanyEmployees.Presentation;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -15,7 +16,8 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers() 
+    .AddApplicationPart(typeof(AssemblyReference).Assembly); 
 
 var app = builder.Build();
 
