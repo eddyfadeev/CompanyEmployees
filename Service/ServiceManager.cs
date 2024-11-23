@@ -12,7 +12,7 @@ public sealed class ServiceManager : IServiceManager
     public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger)
     {
         _companyService = new Lazy<ICompanyService>(() => 
-            new CompanyService(repositoryManager, logger));
+            new CompanyService(repositoryManager));
         
         _employeeService = new Lazy<IEmployeeService>(() => 
             new EmployeeService(repositoryManager, logger));
