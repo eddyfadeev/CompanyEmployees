@@ -2,6 +2,7 @@
 using Contracts.Repository;
 using Service.Contracts;
 using Shared.DTO;
+using Shared.Extensions;
 
 namespace Service;
 
@@ -23,14 +24,8 @@ internal sealed class CompanyService : ICompanyService
             var companies = 
                 _repository.Company.GetAllCompanies(trackChanges);
 
-            var companiesDto = 
-                companies.Select(c => 
-                new CompanyDto
-                (
-                    c.Id,
-                    c.Name ?? string.Empty,
-                    string.Join(' ', c.Address, c.Country))
-                ).ToList();
+            var companiesDto =
+                companies.Select(c => c.MapToDto()).ToList();
             
             return companiesDto;
         }
