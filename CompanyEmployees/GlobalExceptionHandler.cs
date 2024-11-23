@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Contracts.Logging;
+﻿using Contracts.Logging;
+using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -13,19 +13,24 @@ public class GlobalExceptionHandler : IExceptionHandler
         _logger = logger;
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        httpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
 
         var contextFeature = httpContext.Features.Get<IExceptionHandlerFeature>();
         if (contextFeature is not null)
         {
+            httpContext.Response.StatusCode = contextFeature.Error switch
+            {
+                NotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
+            };
+            
             _logger.LogError($"Something went wrong: { exception.Message }");
 
-            await httpContext.Response.WriteAsync(new ErrorDetailsModel()
+            await httpContext.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = "Internal Server Error",
-            }.ToString());
+                Message = contextFeature.Error.Message,
+            }.ToString(), cancellationToken);
         }
 
         return true;
