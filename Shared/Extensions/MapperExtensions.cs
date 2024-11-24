@@ -14,6 +14,15 @@ public static class MapperExtensions
             country: company.Country ?? string.Empty
         );
     
+    public static EmployeeDto MapToDto(this Employee employee) =>
+        new
+        (
+            Id: employee.Id,
+            Name: employee.Name ?? string.Empty,
+            Age: employee.Age,
+            Position: employee.Position ?? string.Empty
+        );
+    
     public static Company MapToEntity(this CompanyDto company)
     {
         company.Deconstruct(out var id, out var name, out var address, out var country);
@@ -26,4 +35,13 @@ public static class MapperExtensions
             Country = country
         };
     }
+    
+    public static Employee MapToEntity(this EmployeeDto employee) =>
+        new()
+        {
+            Id = employee.Id,
+            Name = employee.Name,
+            Age = employee.Age,
+            Position = employee.Position
+        };
 }
