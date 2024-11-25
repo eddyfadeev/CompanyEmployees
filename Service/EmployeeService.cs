@@ -1,5 +1,4 @@
-﻿using Contracts.Logging;
-using Contracts.Repository;
+﻿using Contracts.Repository;
 using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DTO;
@@ -10,12 +9,10 @@ namespace Service;
 internal sealed class EmployeeService : IEmployeeService
 {
     private readonly IRepositoryManager _repository;
-    private readonly ILoggerManager _logger;
 
-    public EmployeeService(IRepositoryManager repository, ILoggerManager logger)
+    public EmployeeService(IRepositoryManager repository)
     {
         _repository = repository;
-        _logger = logger;
     }
 
     public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
@@ -29,5 +26,22 @@ internal sealed class EmployeeService : IEmployeeService
         var employees = _repository.Employee.GetEmployees(companyId, trackChanges);
         
         return employees.Select(e => e.MapToDto());
+    }
+
+    public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+        {
+            throw new CompanyNotFoundException(companyId);
+        }
+
+        var employee = _repository.Employee.GetEmployee(companyId, employeeId, trackChanges);
+        if (employee is null)
+        {
+            throw new EmployeeNotFoundException(employeeId);
+        }
+
+        return employee.MapToDto();
     }
 }
