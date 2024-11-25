@@ -1,5 +1,4 @@
-﻿using Contracts.Logging;
-using Contracts.Repository;
+﻿using Contracts.Repository;
 using Service.Contracts;
 
 namespace Service;
@@ -9,13 +8,13 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<ICompanyService> _companyService;
     private readonly Lazy<IEmployeeService> _employeeService;
 
-    public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger)
+    public ServiceManager(IRepositoryManager repositoryManager)
     {
         _companyService = new Lazy<ICompanyService>(() => 
             new CompanyService(repositoryManager));
         
         _employeeService = new Lazy<IEmployeeService>(() => 
-            new EmployeeService(repositoryManager, logger));
+            new EmployeeService(repositoryManager));
     }    
     
     public ICompanyService CompanyService => 
