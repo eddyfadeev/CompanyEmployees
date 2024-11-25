@@ -6,9 +6,9 @@ namespace Repository;
 
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity>  where TEntity : class
 {
-    protected RepositoryContext RepositoryContext;
+    protected readonly RepositoryContext RepositoryContext;
 
-    public RepositoryBase(RepositoryContext context) =>
+    protected RepositoryBase(RepositoryContext context) =>
         RepositoryContext = context;
 
     public IQueryable<TEntity> FindAll(bool trackChanges) =>
