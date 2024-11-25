@@ -17,10 +17,10 @@ public static class MapperExtensions
     public static EmployeeDto MapToDto(this Employee employee) =>
         new
         (
-            Id: employee.Id,
-            Name: employee.Name ?? string.Empty,
-            Age: employee.Age,
-            Position: employee.Position ?? string.Empty
+            id: employee.Id,
+            name: employee.Name ?? string.Empty,
+            age: employee.Age,
+            position: employee.Position ?? string.Empty
         );
     
     public static Company MapToEntity(this CompanyDto company)
@@ -37,7 +37,7 @@ public static class MapperExtensions
     }
     
     public static Employee MapToEntity(this EmployeeDto employee) =>
-        new()
+        new ()
         {
             Id = employee.Id,
             Name = employee.Name,
