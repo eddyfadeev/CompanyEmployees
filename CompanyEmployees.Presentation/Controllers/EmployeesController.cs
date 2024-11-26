@@ -37,7 +37,7 @@ public class EmployeesController : ControllerBase
             return BadRequest("EmployeeForCreationDto object is null.");
         }
 
-        var employeeToReturn = _service.EmployeeService.CreateEmployee(companyId, employee, trackChanges: false);
+        var employeeToReturn = _service.EmployeeService.CreateEmployeeForCompany(companyId, employee, trackChanges: false);
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, employeeId = employeeToReturn.Id }, employeeToReturn); 
     }
