@@ -46,7 +46,7 @@ public static class MapperExtensions
             Name = company.Name,
             Address = company.Address,
             Country = company.Country,
-            Employees = company.Employees.Select(e => e.MapToEntity()).ToList()
+            Employees = company.Employees?.Select(e => e.MapToEntity()).ToList() ?? []
         };
 
     public static Employee MapToEntity(this EmployeeForCreationDto employee) =>
