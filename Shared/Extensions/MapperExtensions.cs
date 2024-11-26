@@ -6,13 +6,12 @@ namespace Shared.Extensions;
 public static class MapperExtensions
 {
     public static CompanyDto MapToDto(this Company company) =>
-        new
-        (
-            id: company.Id,
-            name: company.Name ?? string.Empty,
-            address: company.Address ?? string.Empty,
-            country: company.Country ?? string.Empty
-        );
+        new ()
+        {
+            Id = company.Id,
+            Name = company.Name ?? string.Empty,
+            FullAddress = string.Join(' ', company.Address, company.Country)
+        };
     
     public static EmployeeDto MapToDto(this Employee employee) =>
         new ()
@@ -22,26 +21,12 @@ public static class MapperExtensions
             Age = employee.Age,
             Position = employee.Position ?? string.Empty
         };
-    
-    public static Company MapToEntity(this CompanyDto company)
-    {
-        company.Deconstruct(out var id, out var name, out var address, out var country);
-        
-        return new Company
-        {
-            Id = id,
-            Name = name,
-            Address = address,
-            Country = country
-        };
-    }
-    
-    public static Employee MapToEntity(this EmployeeDto employee) =>
+
+    public static Company MapToEntity(this CompanyForCreationDto company) =>
         new ()
         {
-            Id = employee.Id,
-            Name = employee.Name,
-            Age = employee.Age,
-            Position = employee.Position
+            Name = company.Name,
+            Address = company.Address,
+            Country = company.Country
         };
 }
