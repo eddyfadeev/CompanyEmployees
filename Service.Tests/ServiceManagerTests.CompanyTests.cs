@@ -148,4 +148,68 @@ public partial class ServiceManagerTests
 
         Assert.That(result, Is.Empty);
     }
+    
+    [Test]
+    public async Task GetByIds_ReturnsListWithCompanyDtos()
+    {
+        var testIds = _context.Companies.Select(c => c.Id).AsEnumerable();
+
+        var result = _companyService.CompanyService.GetByIds(testIds, trackChanges: false);
+        
+        Assert.That(result.First(), Is.TypeOf<CompanyDto>());
+        
+    }
+
+    [Test]
+    public async Task GetByIds_ReturnsNotEmptyListOfCompanies_WhenIdsArePresentInDatabase()
+    {
+        var testIds = _context.Companies.Select(c => c.Id).AsEnumerable();
+
+        var result = _companyService.CompanyService.GetByIds(testIds, trackChanges: false);
+        
+        Assert.That(result, Is.Not.Empty);
+        
+    }
+
+    [Test]
+    public async Task GetByIds_ReturnsEmptyList_WhenPassedEmptyIdsList()
+    {
+        List<Guid> testIds = [];
+
+        var result = _companyService.CompanyService.GetByIds(testIds, trackChanges: false);
+        
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public async Task GetByIds_ReturnsCorrectCompanies()
+    {
+        var expectedCompanies = _context.Companies.Select(c => 
+            c.MapToCompanyDto()).AsEnumerable();
+        var testIds = expectedCompanies.Select(c => c.Id).ToList();
+        
+        var result = _companyService.CompanyService.GetByIds(testIds, trackChanges: false);
+        
+        Assert.That(result, Is.EqualTo(expectedCompanies));
+    }
+
+    [Test]
+    public async Task GetByIds_ThrowsCollectionByIdsBadRequestException_WhenIdsAndCompaniesCountMismatch()
+    {
+        List<Guid> testIds = [Guid.NewGuid(), Guid.NewGuid()];
+
+        Assert.Throws<CollectionByIdsBadRequestException>(() =>
+        {
+            _companyService.CompanyService.GetByIds(testIds, trackChanges: false);
+        });
+    }
+    
+    [Test]
+    public async Task GetByIds_ThrowsIdParametersBadRequestException_WhenIdsAreNull()
+    {
+        Assert.Throws<IdParametersBadRequestException>(() =>
+        {
+            _companyService.CompanyService.GetByIds(null, trackChanges: false);
+        });
+    }
 }
