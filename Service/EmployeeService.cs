@@ -25,7 +25,7 @@ internal sealed class EmployeeService : IEmployeeService
 
         var employees = _repository.Employee.GetEmployees(companyId, trackChanges);
         
-        return employees.Select(e => e.MapToDto());
+        return employees.Select(e => e.MapToEmployeeDto());
     }
 
     public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
@@ -42,6 +42,39 @@ internal sealed class EmployeeService : IEmployeeService
             throw new EmployeeNotFoundException(employeeId);
         }
 
-        return employee.MapToDto();
+        return employee.MapToEmployeeDto();
+    }
+
+    public EmployeeDto CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employee, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+        {
+            throw new CompanyNotFoundException(companyId);
+        }
+
+        var entity = employee.MapToEntity();
+        _repository.Employee.CreateEmployeeForCompany(companyId, entity);
+        _repository.Save();
+
+        return entity.MapToEmployeeDto();
+    }
+
+    public void DeleteEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+        {
+            throw new CompanyNotFoundException(companyId);
+        }
+
+        var employeeForCompany = _repository.Employee.GetEmployee(companyId, employeeId, trackChanges);
+        if (employeeForCompany is null)
+        {
+            throw new EmployeeNotFoundException(employeeId);
+        }
+
+        _repository.Employee.DeleteEmployeeForCompany(employeeForCompany);
+        _repository.Save();
     }
 }

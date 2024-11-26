@@ -1,8 +1,9 @@
 ﻿using CompanyEmployees.Presentation.Controllers;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Service.Contracts;
-using Shared.DTO;
+using Shared.Extensions;
 
 namespace CompanyEmployees.Presentation.Tests.Controllers;
 
@@ -10,7 +11,7 @@ public class CompaniesControllerTests
 {
     private Mock<IServiceManager> _service;
     private CompaniesController _controller;
-    private List<CompanyDto> _companies;
+    private List<Company> _companies;
     
     [SetUp]
     public void Setup()
@@ -20,28 +21,27 @@ public class CompaniesControllerTests
         
         _companies =
         [
-            new
-            (
-                id: Guid.NewGuid(),
-                name: "Test",
-                address: "Test Address",
-                country: "Test Country"
-            ),
-
-            new
-            (
-                id: Guid.NewGuid(),
-                name: "Test2",
-                address: "Test Address2",
-                country: "Test Country2"
-            )
+            new ()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test",
+                Address = "Test Address",
+                Country = "Test Country"
+            },
+            new ()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test2",
+                Address = "Test Address2",
+                Country = "Test Country2"
+            }
         ];
     }
 
     [Test]
     public async Task GetCompanies_ReturnsOkObjectResult()
     {
-        var expected = _companies;
+        var expected = _companies.Select(c => c.MapToCompanyDto());
         _service.Setup(service => 
             service.CompanyService.GetAllCompanies(false))
             .Returns(expected);
@@ -56,7 +56,7 @@ public class CompaniesControllerTests
     [Test]
     public async Task GetCompany_ReturnsOkObjectResult()
     {
-        var expected = _companies[0];
+        var expected = _companies[0].MapToCompanyDto();
         _service.Setup(service =>
             service.CompanyService.GetCompany(expected.Id, false))
             .Returns(expected);
