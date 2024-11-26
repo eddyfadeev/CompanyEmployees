@@ -37,4 +37,14 @@ internal sealed class CompanyService : ICompanyService
         
         return company.MapToDto();
     }
+
+    public CompanyDto CreateCompany(CompanyForCreationDto company)
+    {
+        var companyEntity = company.MapToEntity();
+
+        _repository.Company.CreateCompany(companyEntity);
+        _repository.Save();
+        
+        return companyEntity.MapToDto();
+    }
 }
