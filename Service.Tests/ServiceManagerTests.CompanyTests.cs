@@ -70,7 +70,7 @@ public partial class ServiceManagerTests
         {
             Name = "Create Test"
         };
-        var expectedDto = testCompany.MapToDto();
+        var expectedDto = testCompany.MapToCompanyDto();
         var dtoToCreate = new CompanyForCreationDto(testCompany.Name, Address: string.Empty, Country: string.Empty);
         
         var result = _companyService.CompanyService.CreateCompany(dtoToCreate);
@@ -86,7 +86,7 @@ public partial class ServiceManagerTests
             Address = "123 Test Street, T6W 1T7, Ab",
             Country = "Canada"
         };
-        var expectedDto = testCompany.MapToDto();
+        var expectedDto = testCompany.MapToCompanyDto();
         var dtoToCreate = new CompanyForCreationDto(Name: string.Empty, testCompany.Address, testCompany.Country);
         
         var result = _companyService.CompanyService.CreateCompany(dtoToCreate);
@@ -104,5 +104,48 @@ public partial class ServiceManagerTests
         var expected = await _context.Companies.FirstAsync(c => c.Name == "Test");
 
         Assert.That(result.Id, Is.EqualTo(expected.Id));
+    }
+    
+    [Test]
+    public async Task CreateCompany_AddsEmployees_WhenCompanyCreatedWithEmployees()
+    {
+        var testEmployees = await _context.Employees.ToListAsync();
+        // use MapToEmployeeForCreationDto extension to cut off the id
+        var expectedEmployees = testEmployees.Select(e => 
+            e.MapToEmployeeForCreationDto())
+            .ToList();
+        var testCompany = new CompanyForCreationDto(
+            Name: "TestName", 
+            Address: string.Empty, 
+            Country: string.Empty, 
+            Employees: testEmployees.Select(e => e.MapToEmployeeForCreationDto()));
+
+        await _context.Database.EnsureDeletedAsync();
+        _companyService.CompanyService.CreateCompany(testCompany);
+        // use MapToEmployeeForCreationDto extension to cut off the id
+        var result = await _context.Employees.Select(e => 
+            e.MapToEmployeeForCreationDto())
+            .ToListAsync();
+
+        Assert.That(result, Is.EquivalentTo(expectedEmployees));
+    }
+    
+    [Test]
+    public async Task CreateCompany_DoesNotAddEmployees_WhenCompanyCreatedWithEmptyListOfEmployees()
+    {
+        List<EmployeeForCreationDto> emptyEmployeesList = new ();
+        
+        var testCompany = new CompanyForCreationDto(
+            Name: "TestName", 
+            Address: string.Empty, 
+            Country: string.Empty, 
+            Employees: emptyEmployeesList);
+
+        await _context.Database.EnsureDeletedAsync();
+        _companyService.CompanyService.CreateCompany(testCompany);
+        
+        var result = await _context.Employees.ToListAsync();
+
+        Assert.That(result, Is.Empty);
     }
 }
