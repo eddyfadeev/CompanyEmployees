@@ -29,4 +29,12 @@ public static class MapperExtensions
             Address = company.Address,
             Country = company.Country
         };
+
+    public static Employee MapToEntity(this EmployeeForCreationDto employee) =>
+        new()
+        {
+            Name = employee.Name,
+            Age = employee.Age,
+            Position = employee.Position
+        };
 }
