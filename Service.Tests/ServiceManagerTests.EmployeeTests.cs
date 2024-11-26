@@ -257,7 +257,7 @@ public partial class ServiceManagerTests
     {
         var existentCompany = await _context.Companies.FirstAsync();
         var expectedEmployeeId = Guid.NewGuid();
-        var testEmployee = new Employee()
+        var testEmployee = new Employee
         {
             Id = expectedEmployeeId,
             Name = "TestName",
