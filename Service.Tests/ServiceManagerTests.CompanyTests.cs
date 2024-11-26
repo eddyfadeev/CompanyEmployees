@@ -8,8 +8,6 @@ namespace Service.Tests;
 
 public partial class ServiceManagerTests
 {
-    private IEnumerable<CompanyDto> _companies;
-    
     [Test]
     public async Task GetAllCompanies_ReturnsAllCompanies_WhenDbEntriesExist()
     {
@@ -56,7 +54,7 @@ public partial class ServiceManagerTests
     
     
     [Test]
-    public async Task CreateCompany_ReturnsNotNull_WhenCompanyCreated()
+    public async Task CreateCompany_ReturnsCompanyDto_WhenCompanyCreated()
     {
         var dtoToCreate = new CompanyForCreationDto("Name", "Address", "Country");
         
