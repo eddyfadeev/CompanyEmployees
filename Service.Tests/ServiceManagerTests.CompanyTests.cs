@@ -96,5 +96,15 @@ public partial class ServiceManagerTests
         Assert.That(result.FullAddress, Is.EqualTo(expectedDto.FullAddress));
     }
     
-    
+    [Test]
+    public async Task CreateCompany_ReturnsDtoWithCorrectId_WhenCompanyCreated()
+    {
+        var testCompany = new CompanyForCreationDto("Test", string.Empty, string.Empty);
+
+        var result = _companyService.CompanyService.CreateCompany(testCompany);
+        
+        var expected = await _context.Companies.FirstAsync(c => c.Name == "Test");
+
+        Assert.That(result.Id, Is.EqualTo(expected.Id));
+    }
 }
