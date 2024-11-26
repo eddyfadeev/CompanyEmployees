@@ -98,7 +98,7 @@ public partial class ServiceManagerTests
         );
         
         var result =
-            _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+            _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result, Is.TypeOf<EmployeeDto>());
     }
@@ -124,7 +124,7 @@ public partial class ServiceManagerTests
             Position: string.Empty
         );
         
-        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
 
         var expected = await _context.Employees.FirstAsync(e => e.CompanyId.Equals(testCompany.Id));
         
@@ -153,7 +153,7 @@ public partial class ServiceManagerTests
             Position: string.Empty
         );
         
-        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Name, Is.EqualTo(expectedName));
     }
@@ -180,7 +180,7 @@ public partial class ServiceManagerTests
             Position: string.Empty
         );
         
-        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Age, Is.EqualTo(expectedAge));
     }
@@ -207,7 +207,7 @@ public partial class ServiceManagerTests
             Position: expectedPosition
         );
         
-        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Position, Is.EqualTo(expectedPosition));
     }
@@ -219,6 +219,6 @@ public partial class ServiceManagerTests
         var testEmployee = new EmployeeForCreationDto("TestName", Age: 18, "TestPosition");
 
         Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.CreateEmployee(incorrectCompanyId, testEmployee, trackChanges: false));
+            _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
     }
 }
