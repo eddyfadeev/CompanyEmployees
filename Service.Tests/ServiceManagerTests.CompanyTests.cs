@@ -212,4 +212,136 @@ public partial class ServiceManagerTests
             _companyService.CompanyService.GetByIds(null, trackChanges: false);
         });
     }
+
+    [Test]
+    public async Task CreateCompanyCollection_ThrowsCompanyCollectionBadRequestException_WhenPassedCollectionIsNull()
+    {
+        Assert.Throws<CompanyCollectionBadRequestException>(() =>
+        {
+            _companyService.CompanyService.CreateCompanyCollection(null);
+        });
+    }
+
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsCompanyCollection_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var expectedCompanies = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.companies, Is.Not.Null);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsNonEmptyCollection_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var expectedCompanies = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.companies, Is.Not.Empty);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsIdsString_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var expectedCompanies = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.ids, Is.Not.Null);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsNonEmptyIdsString_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var expectedCompanies = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.ids, Is.Not.WhiteSpace);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsEmptyCollection_WhenPassedEmptyCollection()
+    {
+        var expectedCompanies = new List<CompanyForCreationDto>();
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.companies, Is.Empty);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsCollection_NullCheck_WhenPassedEmptyCollection()
+    {
+        var expectedCompanies = new List<CompanyForCreationDto>();
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.companies, Is.Not.Null);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsNotNullIdsString_WhenPassedEmptyCollection()
+    {
+        var expectedCompanies = new List<CompanyForCreationDto>();
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.ids, Is.Not.Null);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsEmptyIdsString_WhenPassedEmptyCollection()
+    {
+        var expectedCompanies = new List<CompanyForCreationDto>();
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(expectedCompanies);
+        
+        Assert.That(result.ids, Is.Empty);
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsCorrectCollection_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var companiesForInserting = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(companiesForInserting);
+        
+        var expected = _context.Companies.Select(c => 
+            c.MapToCompanyDto())
+            .AsEnumerable();
+        
+        Assert.That(result.companies, Is.EquivalentTo(expected));
+    }
+    
+    [Test]
+    public async Task CreateCompanyCollection_ReturnsCorrectIdsString_WhenPassedCollectionWithEntries()
+    {
+        var testCompanies = await _context.Companies.ToListAsync();
+        var companiesForInserting = testCompanies.Select(c => c.MapToCompanyForCreationDto());
+        await _context.Database.EnsureDeletedAsync();
+
+        var result = _companyService.CompanyService.CreateCompanyCollection(companiesForInserting);
+        
+        var idsFromDb = _context.Companies.Select(c => c.Id).AsEnumerable();
+        var expected = string.Join(',', idsFromDb);
+        
+        Assert.That(result.ids, Is.EquivalentTo(expected));
+    }
 }
