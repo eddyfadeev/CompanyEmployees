@@ -25,7 +25,7 @@ internal sealed class EmployeeService : IEmployeeService
 
         var employees = _repository.Employee.GetEmployees(companyId, trackChanges);
         
-        return employees.Select(e => e.MapToDto());
+        return employees.Select(e => e.MapToEmployeeDto());
     }
 
     public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
@@ -42,7 +42,7 @@ internal sealed class EmployeeService : IEmployeeService
             throw new EmployeeNotFoundException(employeeId);
         }
 
-        return employee.MapToDto();
+        return employee.MapToEmployeeDto();
     }
 
     public EmployeeDto CreateEmployee(Guid companyId, EmployeeForCreationDto employee, bool trackChanges)
@@ -57,6 +57,6 @@ internal sealed class EmployeeService : IEmployeeService
         _repository.Employee.CreateEmployeeForCompany(companyId, entity);
         _repository.Save();
 
-        return entity.MapToDto();
+        return entity.MapToEmployeeDto();
     }
 }

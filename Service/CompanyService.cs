@@ -21,7 +21,7 @@ internal sealed class CompanyService : ICompanyService
             _repository.Company.GetAllCompanies(trackChanges);
 
         var companiesDto =
-            companies.Select(c => c.MapToDto()).ToList();
+            companies.Select(c => c.MapToCompanyDto()).ToList();
             
         return companiesDto;
     }
@@ -35,7 +35,7 @@ internal sealed class CompanyService : ICompanyService
             throw new CompanyNotFoundException(id);
         }
         
-        return company.MapToDto();
+        return company.MapToCompanyDto();
     }
 
     public CompanyDto CreateCompany(CompanyForCreationDto company)
@@ -45,6 +45,6 @@ internal sealed class CompanyService : ICompanyService
         _repository.Company.CreateCompany(companyEntity);
         _repository.Save();
         
-        return companyEntity.MapToDto();
+        return companyEntity.MapToCompanyDto();
     }
 }

@@ -14,7 +14,7 @@ public partial class ServiceManagerTests
         var company = await _context.Companies.FirstAsync();
         var expected = _context.Employees.Where(e => 
             e.CompanyId.Equals(company.Id))
-            .Select(e => e.MapToDto())
+            .Select(e => e.MapToEmployeeDto())
             .AsEnumerable();
 
         var result = await Task.Run(() => 
@@ -38,7 +38,7 @@ public partial class ServiceManagerTests
         await _context.SaveChangesAsync();
         var expected = _context.Employees
             .Where(e => e.CompanyId == companyToCreate.Id)
-            .Select(e => e.MapToDto())
+            .Select(e => e.MapToEmployeeDto())
             .AsEnumerable();
 
         var result = _companyService.EmployeeService.GetEmployees(companyToCreate.Id, trackChanges: false);
@@ -59,7 +59,7 @@ public partial class ServiceManagerTests
     public async Task GetEmployee_ReturnsCorrectEmployee()
     {
         var test = await _context.Employees.FirstAsync();
-        var expected = test.MapToDto();
+        var expected = test.MapToEmployeeDto();
 
         var result = _companyService.EmployeeService.GetEmployee(test.CompanyId, test.Id, trackChanges: false);
         
