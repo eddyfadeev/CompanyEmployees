@@ -52,6 +52,8 @@ public class CsvOutputFormatter : TextOutputFormatter
                     FormatCsv(buffer, employee);
                 }
                 break;
+            default:
+                throw new ArgumentException("Unknown argument", nameof(context.Object));
         }
         
         await response.WriteAsync(buffer.ToString());
