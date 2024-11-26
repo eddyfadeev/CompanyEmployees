@@ -221,4 +221,57 @@ public partial class ServiceManagerTests
         Assert.Throws<CompanyNotFoundException>(() =>
             _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
     }
+
+    [Test]
+    public async Task DeleteEmployeeForCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyIdPassed()
+    {
+        var incorrectCompanyId = Guid.NewGuid();
+        var existentEmployee = await _context.Employees.FirstAsync();
+
+        Assert.Throws<CompanyNotFoundException>(() => 
+            _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, existentEmployee.Id, trackChanges: false));
+    }
+    
+    [Test]
+    public async Task DeleteEmployeeForCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyAndIncorrectEmployeeIdsPassed()
+    {
+        var incorrectCompanyId = Guid.NewGuid();
+        var incorrectEmployeeId = Guid.NewGuid();
+
+        Assert.Throws<CompanyNotFoundException>(() => 
+            _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, incorrectEmployeeId, trackChanges: false));
+    }
+    
+    [Test]
+    public async Task DeleteEmployeeForCompany_ThrowsEmployeeNotFoundException_WhenIncorrectEmployeeIdPassed()
+    {
+        var company = await _context.Companies.FirstAsync();
+        var incorrectEmployeeId = Guid.NewGuid();
+
+        Assert.Throws<EmployeeNotFoundException>(() => 
+            _companyService.EmployeeService.DeleteEmployeeForCompany(company.Id, incorrectEmployeeId, trackChanges: false));
+    }
+
+    [Test]
+    public async Task DeleteEmployeeForCompany_CorrectlyDeletes_WhenCorrectParametersPassed()
+    {
+        var existentCompany = await _context.Companies.FirstAsync();
+        var expectedEmployeeId = Guid.NewGuid();
+        var testEmployee = new Employee()
+        {
+            Id = expectedEmployeeId,
+            Name = "TestName",
+            Age = 0,
+            Position = "TestPosition",
+            CompanyId = existentCompany.Id
+        };
+        await _context.Employees.AddAsync(testEmployee);
+        await _context.SaveChangesAsync();
+        _context.Entry(testEmployee).State = EntityState.Detached;
+
+        _companyService.EmployeeService.DeleteEmployeeForCompany(
+            existentCompany.Id, expectedEmployeeId, trackChanges: false);
+        
+        Assert.That(await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id), Is.False);
+    }
 }
