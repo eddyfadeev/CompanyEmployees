@@ -2,6 +2,7 @@ using CompanyEmployees;
 using CompanyEmployees.Extensions;
 using CompanyEmployees.Presentation;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.Configure<ApiBehaviorOptions>(options => 
+    options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddControllers(config =>
     {
