@@ -1,4 +1,5 @@
 ﻿using Entities.Exceptions;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTO;
 using Shared.Extensions;
@@ -7,8 +8,6 @@ namespace Service.Tests;
 
 public partial class ServiceManagerTests
 {
-    private IEnumerable<EmployeeDto> _employees;
-
     [Test]
     public async Task GetEmployees_ReturnsEmployeesList_WhenCorrectCompanyId()
     {
@@ -20,6 +19,29 @@ public partial class ServiceManagerTests
 
         var result = await Task.Run(() => 
             _companyService.EmployeeService.GetEmployees(company.Id, trackChanges: false));
+        
+        Assert.That(result, Is.EquivalentTo(expected));
+    }
+
+    [Test]
+    public async Task GetEmployees_ReturnsEmptyList_WhenNoEmployees()
+    {
+        var testId = Guid.NewGuid();
+        var companyToCreate = new Company
+        {
+            Id = testId,
+            Name = "Empty Company",
+            Address = string.Empty,
+            Country = string.Empty,
+        };
+        await _context.Companies.AddAsync(companyToCreate);
+        await _context.SaveChangesAsync();
+        var expected = _context.Employees
+            .Where(e => e.CompanyId == companyToCreate.Id)
+            .Select(e => e.MapToDto())
+            .AsEnumerable();
+
+        var result = _companyService.EmployeeService.GetEmployees(companyToCreate.Id, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -62,5 +84,141 @@ public partial class ServiceManagerTests
 
         Assert.Throws<EmployeeNotFoundException>(() =>
             _companyService.EmployeeService.GetEmployee(test.Id, incorrectEmployeeId, trackChanges: false));
+    }
+
+    [Test]
+    public async Task CreateEmployee_ReturnsEmployeeDto_WhenCreated()
+    {
+        var testCompany = await _context.Companies.FirstAsync();
+        var testEmployee = new EmployeeForCreationDto
+        (
+            Name: string.Empty,
+            Age: default,
+            Position: string.Empty
+        );
+        
+        var result =
+            _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        
+        Assert.That(result, Is.TypeOf<EmployeeDto>());
+    }
+
+    [Test]
+    public async Task CreateEmployee_ReturnsDtoWithCorrectId_WhenCreated()
+    {
+        var testId = Guid.NewGuid();
+        var testCompany = new Company
+        {
+            Id = testId,
+            Name = "Test",
+            Address = string.Empty,
+            Country = string.Empty,
+        };
+        await _context.Companies.AddAsync(testCompany);
+        await _context.SaveChangesAsync();
+        
+        var testEmployee = new EmployeeForCreationDto
+        (
+            Name: string.Empty,
+            Age: default,
+            Position: string.Empty
+        );
+        
+        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+
+        var expected = await _context.Employees.FirstAsync(e => e.CompanyId.Equals(testCompany.Id));
+        
+        Assert.That(result.Id, Is.EqualTo(expected.Id));
+    }
+
+    [Test]
+    public async Task CreateEmployee_ReturnsDtoWithCorrectName_WhenCreated()
+    {
+        const string expectedName = "TestName";
+        var testId = Guid.NewGuid();
+        var testCompany = new Company
+        {
+            Id = testId,
+            Name = "Test",
+            Address = string.Empty,
+            Country = string.Empty,
+        };
+        await _context.Companies.AddAsync(testCompany);
+        await _context.SaveChangesAsync();
+        
+        var testEmployee = new EmployeeForCreationDto
+        (
+            Name: expectedName,
+            Age: default,
+            Position: string.Empty
+        );
+        
+        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        
+        Assert.That(result.Name, Is.EqualTo(expectedName));
+    }
+
+    [Test]
+    public async Task CreateEmployee_ReturnsDtoWithCorrectAge_WhenCreated()
+    {
+        const int expectedAge = 32;
+        var testId = Guid.NewGuid();
+        var testCompany = new Company
+        {
+            Id = testId,
+            Name = "Test",
+            Address = string.Empty,
+            Country = string.Empty,
+        };
+        await _context.Companies.AddAsync(testCompany);
+        await _context.SaveChangesAsync();
+        
+        var testEmployee = new EmployeeForCreationDto
+        (
+            Name: string.Empty,
+            Age: expectedAge,
+            Position: string.Empty
+        );
+        
+        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        
+        Assert.That(result.Age, Is.EqualTo(expectedAge));
+    }
+
+    [Test]
+    public async Task CreateEmployee_ReturnsDtoWithCorrectPosition_WhenCreated()
+    {
+        const string expectedPosition = "TestPosition";
+        var testId = Guid.NewGuid();
+        var testCompany = new Company
+        {
+            Id = testId,
+            Name = "Test",
+            Address = string.Empty,
+            Country = string.Empty,
+        };
+        await _context.Companies.AddAsync(testCompany);
+        await _context.SaveChangesAsync();
+        
+        var testEmployee = new EmployeeForCreationDto
+        (
+            Name: string.Empty,
+            Age: default,
+            Position: expectedPosition
+        );
+        
+        var result = _companyService.EmployeeService.CreateEmployee(testCompany.Id, testEmployee, trackChanges: false);
+        
+        Assert.That(result.Position, Is.EqualTo(expectedPosition));
+    }
+
+    [Test]
+    public async Task CreateEmployee_ThrowsCompanyNotFound_WhenIncorrectCompanyId()
+    {
+        var incorrectCompanyId = Guid.NewGuid();
+        var testEmployee = new EmployeeForCreationDto("TestName", Age: 18, "TestPosition");
+
+        Assert.Throws<CompanyNotFoundException>(() =>
+            _companyService.EmployeeService.CreateEmployee(incorrectCompanyId, testEmployee, trackChanges: false));
     }
 }
