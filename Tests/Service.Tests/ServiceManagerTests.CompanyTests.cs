@@ -8,6 +8,7 @@ namespace Service.Tests;
 
 public partial class ServiceManagerTests
 {
+    #region Get All Companies Tests
     [Test]
     public async Task GetAllCompanies_ReturnsAllCompanies_WhenDbEntriesExist()
     {
@@ -31,7 +32,11 @@ public partial class ServiceManagerTests
         
         Assert.That(result, Is.Empty);
     }
+    
+    #endregion
 
+    #region Get Company Tests
+    
     [Test]
     public async Task GetCompany_ReturnsCorrectCompany()
     {
@@ -52,6 +57,9 @@ public partial class ServiceManagerTests
             _companyService.CompanyService.GetCompany(wrongId, trackChanges: false));
     }
     
+    #endregion
+    
+    #region Create Company Tests
     
     [Test]
     public async Task CreateCompany_ReturnsCompanyDto_WhenCompanyCreated()
@@ -149,6 +157,10 @@ public partial class ServiceManagerTests
         Assert.That(result, Is.Empty);
     }
     
+    #endregion
+    
+    #region Get By Ids Tests
+    
     [Test]
     public async Task GetByIds_ReturnsListWithCompanyDtos()
     {
@@ -212,7 +224,11 @@ public partial class ServiceManagerTests
             _companyService.CompanyService.GetByIds(null, trackChanges: false);
         });
     }
+    
+    #endregion
 
+    #region Create Company Collection Tests
+    
     [Test]
     public async Task CreateCompanyCollection_ThrowsCompanyCollectionBadRequestException_WhenPassedCollectionIsNull()
     {
@@ -344,7 +360,10 @@ public partial class ServiceManagerTests
         
         Assert.That(result.ids, Is.EquivalentTo(expected));
     }
+    
+    #endregion
 
+    #region Delete Company Tests
     [Test]
     public async Task DeleteCompany_ThrowsCompanyNotFoundException_WhenIncorrectIdPassed()
     {
@@ -396,4 +415,150 @@ public partial class ServiceManagerTests
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
+    
+    #endregion
+    
+    #region Update Company Tests
+    
+    [Test]
+    public async Task UpdateCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
+    {
+        var companyForUpdate = new CompanyForUpdateDto(
+            "UpdatedName", "UpdatedAddress", "UpdatedCountry", Employees: []);
+        var incorrectCompanyId = Guid.NewGuid();
+        
+        Assert.Throws<CompanyNotFoundException>(() =>
+            _companyService.CompanyService.UpdateCompany(incorrectCompanyId, companyForUpdate, trackChanges: true)); 
+    }
+    
+    [Test]
+    public async Task UpdateCompany_UpdatesName_WhenOnlyNameForChangePassed()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            "UpdatedName", Address: string.Empty, Country: string.Empty, Employees: []);
+        
+        expected.Name = testUpdateDto.Name;
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_UpdatesAddress_WhenOnlyAddressForChangePassed()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: string.Empty, "UpdatedAddress", Country: string.Empty, Employees: []);
+        
+        expected.Address = testUpdateDto.Address;
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_UpdatesCountry_WhenOnlyCountryForChangePassed()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: string.Empty, Address: string.Empty, "UpdatedCountry", Employees: []);
+        
+        expected.Country = testUpdateDto.Country;
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_UpdatesEmployees_WhenOnlyEmployeesForChangePassed()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: 
+            [
+                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"),
+                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+            ]);
+
+        expected.Employees = testUpdateDto!.Employees.Select(e => e.MapToEntity()).ToList();
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Nulls()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: null, Address: null, Country: null, Employees: null);
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyStringEmptyCollection()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: []);
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyStringNullCollection()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: null);
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_WhitespaceEmptyCollection()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: " ", Address: " ", Country: " ", Employees: []);
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_WhitespaceNullCollection()
+    {
+        var expected = await _context.Companies.FirstAsync();
+        var testUpdateDto = new CompanyForUpdateDto(
+            Name: " ", Address: " ", Country: " ", Employees: null);
+
+        _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
+        var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    #endregion
 }
