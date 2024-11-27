@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models;
 
-public class Company
+public sealed class Company : IEquatable<Company>
 {
     private ICollection<Employee>? _employees = [];
     
@@ -25,4 +25,26 @@ public class Company
         get => _employees;
         set => _employees = value ?? new List<Employee>();
     }
+
+    public bool Equals(Company? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return Id == other.Id &&
+               Name == other.Name &&
+               Address == other.Address &&
+               Country == other.Country &&
+               (Employees == null && other.Employees == null || 
+                Employees != null && other.Employees != null &&
+                Employees.OrderBy(e => e.Id).SequenceEqual(other.Employees.OrderBy(e => e.Id)));
+    }
+    
+    public override bool Equals(object? obj) =>
+        Equals(obj as Company);
+
+    public override int GetHashCode() =>
+        HashCode.Combine(Id, Name, Address, Country);
 }

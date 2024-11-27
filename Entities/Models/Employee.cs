@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models;
 
-public sealed class Employee
+public sealed class Employee : IEquatable<Employee>
 {
     [Column("EmployeeId")]
     public Guid Id { get; set; }
@@ -24,33 +24,27 @@ public sealed class Employee
     public Guid CompanyId { get; set; }
     public Company? Company { get; set; }
     
-    public override bool Equals(object? obj)
+    public bool Equals(Employee? other)
     {
-        if (obj is null || GetType() != obj.GetType())
+        if (other is null)
         {
             return false;
         }
         
-        Employee employee = (Employee)obj;
-        return Id == employee.Id && 
-               Name == employee.Name && 
-               Age == employee.Age && 
-               Position == employee.Position && 
-               CompanyId == employee.CompanyId;
-    }
-
-    protected bool Equals(Employee other)
-    {
-        return Id.Equals(other.Id) && 
+        return Id == other.Id && 
                Name == other.Name && 
                Age == other.Age && 
                Position == other.Position && 
-               CompanyId.Equals(other.CompanyId) && 
-               Equals(Company, other.Company);
+               CompanyId == other.CompanyId &&
+               (Company == null && other.Company == null || 
+                Company != null && Company.Equals(other.Company));
     }
+    
+    public override bool Equals(object? obj) =>
+        Equals(obj as Employee);
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Name, Age, Position, CompanyId, Company);
+        return HashCode.Combine(Id, Name, Age, Position, CompanyId);
     }
 }
