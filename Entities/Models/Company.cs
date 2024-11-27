@@ -5,6 +5,8 @@ namespace Entities.Models;
 
 public class Company
 {
+    private ICollection<Employee>? _employees = [];
+    
     [Column("CompanyId")]
     public Guid Id { get; set; }
     
@@ -17,6 +19,10 @@ public class Company
     public string? Address { get; set; }
         
     public string? Country { get; set; }
-    
-    public ICollection<Employee>? Employees { get; set; }
+
+    public ICollection<Employee>? Employees
+    {
+        get => _employees;
+        set => _employees = value ?? new List<Employee>();
+    }
 }
