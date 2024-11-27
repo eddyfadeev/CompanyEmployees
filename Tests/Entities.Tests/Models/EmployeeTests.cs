@@ -167,4 +167,309 @@ public class EmployeeTests
         Assert.Throws<NullReferenceException>(() =>
             result.Company.ToString());
     }
+    
+    [Test]
+    public void IEquatableEquals_WhenEmployeesAreEqual_ShouldReturnTrue()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesAreEqual_ShouldReturnTrue()
+    {
+        object otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesAreNotEqual_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee();
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentIds_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = Guid.NewGuid(),
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentNames_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = "Different",
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentAge_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = -1,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentPositions_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = "Different",
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentCompanyIds_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = Guid.NewGuid(),
+            Company = _employee.Company
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenEmployeesHaveDifferentCompanies_ShouldReturnFalse()
+    {
+        var otherEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = new Company()
+        };
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_ComparingDifferentTypes_ShouldReturnFalse()
+    {
+        object otherEmployee = new Company();
+
+        var result = _employee.Equals(otherEmployee);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_ComparingToNull_ShouldReturnFalse()
+    {
+        var result = _employee.Equals(null);
+        
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void GetHashCode_EqualObjects_ShouldHaveSameHashCodes()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentId_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = Guid.NewGuid(),
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentName_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = "Different",
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentAge_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = -1,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentPosition_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = "Different",
+            CompanyId = _employee.CompanyId,
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentCompanyId_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = Guid.NewGuid(),
+            Company = _employee.Company
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentCompany_ShouldGenerateSameHashCode()
+    {
+        var expected = _employee.GetHashCode();
+        var testEmployee = new Employee
+        {
+            Id = _employee.Id,
+            Name = _employee.Name,
+            Age = _employee.Age,
+            Position = _employee.Position,
+            CompanyId = _employee.CompanyId,
+            Company = new Company()
+        };
+
+        var result = testEmployee.GetHashCode();
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
 }
