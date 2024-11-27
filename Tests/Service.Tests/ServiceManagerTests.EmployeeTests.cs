@@ -267,10 +267,9 @@ public partial class ServiceManagerTests
         };
         await _context.Employees.AddAsync(testEmployee);
         await _context.SaveChangesAsync();
-        _context.Entry(testEmployee).State = EntityState.Detached;
 
         _companyService.EmployeeService.DeleteEmployeeForCompany(
-            existentCompany.Id, expectedEmployeeId, trackChanges: false);
+            existentCompany.Id, expectedEmployeeId, trackChanges: true);
         
         Assert.That(await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id), Is.False);
     }
