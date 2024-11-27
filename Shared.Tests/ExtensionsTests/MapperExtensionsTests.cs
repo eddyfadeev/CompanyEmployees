@@ -94,6 +94,7 @@ public class MapperExtensionsTests
     #endregion
     
     #region Update Employee Entity Tests
+    
     [Test]
     public void Employee_UpdateEntity_ShouldReturnUpdatedEntity_WhenPassedDtoIsValid()
     {
@@ -560,5 +561,177 @@ public class MapperExtensionsTests
         Assert.That(result, Is.EqualTo(_expectedCompanyEntity));
     }
 
+    #endregion
+
+    #region Patch Emplloyee Entity Tests
+
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenPassedDtoIsValid()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenPassedNameIsNull_OnlyNameIsNull()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto(Name: null, 99, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenPassedPositionIsNull_OnlyPositionIsNull()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: null);
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenPassedNameIsEmpty_OnlyNameIsEmpty()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto(string.Empty, 99, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenPassedPositionIsEmpty_OnlyPositionIsEmpty()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: string.Empty);
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenAgeIsZero()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 0, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntityWithAgeZero_WhenAgeIsNegative()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", -1, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = 0;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
+    [Test]
+    public void Employee_PatchEntity_ShouldReturnPatchedEntity_WhenAgeIsPositive()
+    {
+        var testEmployeeEntity = new Employee
+        {
+            Id = _expectedEmployeeEntity.Id,
+            Name = _expectedEmployeeEntity.Name,
+            Age = _expectedEmployeeEntity.Age,
+            Position = _expectedEmployeeEntity.Position
+        };
+        
+        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        _expectedEmployeeEntity.Name = testEmployeeDto.Name;
+        _expectedEmployeeEntity.Age = testEmployeeDto.Age;
+        _expectedEmployeeEntity.Position = testEmployeeDto.Position;
+
+        var result = testEmployeeEntity.PatchEntity(testEmployeeDto);
+        
+        Assert.That(result, Is.EqualTo(_expectedEmployeeEntity));
+    }
+    
     #endregion
 }
