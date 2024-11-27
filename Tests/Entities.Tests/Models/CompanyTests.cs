@@ -172,4 +172,268 @@ public class CompanyTests
         
         Assert.That(expectedResult.Employees, Is.Not.Empty);
     }
+
+    [Test]
+    public void IEquatableEquals_WhenCompaniesAreEqual_ShouldReturnTrue()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesAreEqual_ShouldReturnTrue()
+    {
+        var company = _company;
+        object otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesAreNotEqual_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company();
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesHaveDifferentIds_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = Guid.Empty,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesHaveDifferentNames_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = "Different",
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesHaveDifferentAddresses_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = "Different",
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesHaveDifferentCountries_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = "Different",
+            Employees = _company.Employees
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_WhenCompaniesHaveDifferentEmployees_ShouldReturnFalse()
+    {
+        var company = _company;
+        var otherCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = []
+        };
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_ComparingDifferentTypes_ShouldReturnFalse()
+    {
+        var company = _company;
+        object otherCompany = new Employee();
+
+        var result = company.Equals(otherCompany);
+        
+        Assert.That(result, Is.False);
+    }
+    
+    [Test]
+    public void Equals_ComparingToNull_ShouldReturnFalse()
+    {
+        var result = _company.Equals(null);
+        
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void GetHashCode_EqualObjects_ShouldHaveSameHashCodes()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentId_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = Guid.NewGuid(),
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentName_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = _company.Id,
+            Name = "Different",
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentAddress_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = "Different",
+            Country = _company.Country,
+            Employees = _company.Employees
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentCountry_ShouldGenerateDifferentHashCode()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = "Different",
+            Employees = _company.Employees
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.Not.EqualTo(expected));
+    }
+    
+    [Test]
+    public void GetHashCode_DifferentEmployees_ShouldGenerateSameHashCode()
+    {
+        var expected = _company.GetHashCode();
+        var testCompany = new Company
+        {
+            Id = _company.Id,
+            Name = _company.Name,
+            Address = _company.Address,
+            Country = _company.Country,
+            Employees = []
+        };
+
+        var result = testCompany.GetHashCode();
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
 }
