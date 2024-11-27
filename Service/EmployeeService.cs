@@ -120,7 +120,7 @@ internal sealed class EmployeeService : IEmployeeService
 
     public void SaveChangesForPatch(EmployeeForUpdateDto employeeToPatch, Employee employeeEntity)
     {
-        employeeEntity.UpdateEntity(employeeToPatch);
+        employeeEntity.PatchEntity(employeeToPatch);
         _repository.Save();
     }
 }
