@@ -267,11 +267,115 @@ public partial class ServiceManagerTests
         };
         await _context.Employees.AddAsync(testEmployee);
         await _context.SaveChangesAsync();
-        _context.Entry(testEmployee).State = EntityState.Detached;
 
         _companyService.EmployeeService.DeleteEmployeeForCompany(
-            existentCompany.Id, expectedEmployeeId, trackChanges: false);
+            existentCompany.Id, expectedEmployeeId, trackChanges: true);
         
         Assert.That(await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id), Is.False);
+    }
+
+    [Test]
+    public async Task UpdateEmployeeForCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
+    {
+        var testEmployee = await _context.Employees.FirstAsync();
+        var incorrectCompanyId = Guid.NewGuid();
+        var updateDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        
+        Assert.Throws<CompanyNotFoundException>(() =>
+            _companyService.EmployeeService.UpdateEmployeeForCompany(
+                incorrectCompanyId, testEmployee.Id, updateDto, compTrackChanges: false, empTrackChanges: false));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_ThrowsEmployeeNotFoundException_WhenIncorrectCompanyId()
+    {
+        var testCompany = await _context.Companies.FirstAsync();
+        var incorrectEmployeeId = Guid.NewGuid();
+        var updateDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        
+        Assert.Throws<EmployeeNotFoundException>(() =>
+            _companyService.EmployeeService.UpdateEmployeeForCompany(
+                testCompany.Id, incorrectEmployeeId, updateDto, compTrackChanges: false, empTrackChanges: false));
+    }
+
+    [Test]
+    public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyNameForChangePassed()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto("UpdatedName", Age:-1, Position:null);
+        expected.Name = updateDto.Name;
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyAgeForChangePassed()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto(Name:null, Age: 100, Position:null);
+        expected.Age = updateDto.Age;
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyPositionForChangePassed()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto(Name:null, Age: -1, "UpdatedPosition");
+        expected.Age = updateDto.Age;
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Nulls()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto(Name:null, Age: -1, null);
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyString()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto(Name:string.Empty, Age: -1, string.Empty);
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Whitespace()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var updateDto = new EmployeeForUpdateDto(Name:" ", Age: -1, Position:" ");
+
+        _companyService.EmployeeService.UpdateEmployeeForCompany(
+            expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
     }
 }

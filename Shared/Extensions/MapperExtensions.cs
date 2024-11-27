@@ -39,6 +39,14 @@ public static class MapperExtensions
             Age: employee.Age,
             Position: employee.Position ?? string.Empty
         );
+    
+    public static EmployeeForUpdateDto MapToEmployeeForUpdateDto(this Employee employee) =>
+        new 
+        (
+            Name: employee.Name ?? string.Empty,
+            Age: employee.Age,
+            Position: employee.Position ?? string.Empty
+        );
 
     public static Company MapToEntity(this CompanyForCreationDto company) =>
         new ()
@@ -56,4 +64,25 @@ public static class MapperExtensions
             Age = employee.Age,
             Position = employee.Position
         };
+
+    public static Employee UpdateEntity(this Employee employee, EmployeeForUpdateDto updateDto)
+    {
+        employee.Name = string.IsNullOrWhiteSpace(updateDto.Name) ? employee.Name : updateDto.Name.Trim();
+        employee.Age = updateDto.Age is < 199 and > 0 ? updateDto.Age : employee.Age;
+        employee.Position = string.IsNullOrWhiteSpace(updateDto.Position) ? employee.Position : updateDto.Position.Trim();
+        
+        return employee;
+    }
+
+    public static Company UpdateEntity(this Company company, CompanyForUpdateDto updateDto)
+    {
+        company.Name = string.IsNullOrWhiteSpace(updateDto.Name) ? company.Name : updateDto.Name;
+        company.Address = string.IsNullOrWhiteSpace(updateDto.Address) ? company.Address : updateDto.Address;
+        company.Country = string.IsNullOrWhiteSpace(updateDto.Country) ? company.Country : updateDto.Country;
+        company.Employees = (updateDto.Employees is null || !updateDto.Employees.Any()
+            ? company.Employees
+            : updateDto.Employees.Select(e => e.MapToEntity()).ToList());
+
+        return company;
+    }
 }

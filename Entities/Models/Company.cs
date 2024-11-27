@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models;
 
-public class Company
+public sealed class Company : IEquatable<Company>
 {
+    private ICollection<Employee>? _employees = [];
+    
     [Column("CompanyId")]
     public Guid Id { get; set; }
     
@@ -17,6 +19,32 @@ public class Company
     public string? Address { get; set; }
         
     public string? Country { get; set; }
+
+    public ICollection<Employee>? Employees
+    {
+        get => _employees;
+        set => _employees = value ?? new List<Employee>();
+    }
+
+    public bool Equals(Company? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return Id == other.Id &&
+               Name == other.Name &&
+               Address == other.Address &&
+               Country == other.Country &&
+               (Employees == null && other.Employees == null || 
+                Employees != null && other.Employees != null &&
+                Employees.OrderBy(e => e.Id).SequenceEqual(other.Employees.OrderBy(e => e.Id)));
+    }
     
-    public ICollection<Employee>? Employees { get; set; }
+    public override bool Equals(object? obj) =>
+        Equals(obj as Company);
+
+    public override int GetHashCode() =>
+        HashCode.Combine(Id, Name, Address, Country);
 }
