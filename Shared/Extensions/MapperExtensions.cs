@@ -73,4 +73,16 @@ public static class MapperExtensions
         
         return employee;
     }
+
+    public static Company UpdateEntity(this Company company, CompanyForUpdateDto updateDto)
+    {
+        company.Name = string.IsNullOrWhiteSpace(updateDto.Name) ? company.Name : updateDto.Name;
+        company.Address = string.IsNullOrWhiteSpace(updateDto.Address) ? company.Address : updateDto.Address;
+        company.Country = string.IsNullOrWhiteSpace(updateDto.Country) ? company.Country : updateDto.Country;
+        company.Employees = (updateDto.Employees is null || !updateDto.Employees.Any()
+            ? company.Employees
+            : updateDto.Employees.Select(e => e.MapToEntity()).ToList());
+
+        return company;
+    }
 }
