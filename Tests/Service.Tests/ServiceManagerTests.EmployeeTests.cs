@@ -8,6 +8,8 @@ namespace Service.Tests;
 
 public partial class ServiceManagerTests
 {
+    #region Get Employees Tests
+    
     [Test]
     public async Task GetEmployees_ReturnsEmployeesList_WhenCorrectCompanyId()
     {
@@ -55,6 +57,10 @@ public partial class ServiceManagerTests
             _companyService.EmployeeService.GetEmployees(incorrectCompanyId, trackChanges: false));
     }
 
+    #endregion
+    
+    #region Get Employee Tests
+    
     [Test]
     public async Task GetEmployee_ReturnsCorrectEmployee()
     {
@@ -102,9 +108,13 @@ public partial class ServiceManagerTests
         
         Assert.That(result, Is.TypeOf<EmployeeDto>());
     }
+    
+    #endregion
 
+    #region Create Employee For Company Tests
+    
     [Test]
-    public async Task CreateEmployee_ReturnsDtoWithCorrectId_WhenCreated()
+    public async Task CreateEmployeeForCompany_ReturnsDtoWithCorrectId_WhenCreated()
     {
         var testId = Guid.NewGuid();
         var testCompany = new Company
@@ -132,7 +142,7 @@ public partial class ServiceManagerTests
     }
 
     [Test]
-    public async Task CreateEmployee_ReturnsDtoWithCorrectName_WhenCreated()
+    public async Task CreateEmployeeForCompany_ReturnsDtoWithCorrectName_WhenCreated()
     {
         const string expectedName = "TestName";
         var testId = Guid.NewGuid();
@@ -159,7 +169,7 @@ public partial class ServiceManagerTests
     }
 
     [Test]
-    public async Task CreateEmployee_ReturnsDtoWithCorrectAge_WhenCreated()
+    public async Task CreateEmployeeForCompany_ReturnsDtoWithCorrectAge_WhenCreated()
     {
         const int expectedAge = 32;
         var testId = Guid.NewGuid();
@@ -186,7 +196,7 @@ public partial class ServiceManagerTests
     }
 
     [Test]
-    public async Task CreateEmployee_ReturnsDtoWithCorrectPosition_WhenCreated()
+    public async Task CreateEmployeeForCompany_ReturnsDtoWithCorrectPosition_WhenCreated()
     {
         const string expectedPosition = "TestPosition";
         var testId = Guid.NewGuid();
@@ -213,7 +223,7 @@ public partial class ServiceManagerTests
     }
 
     [Test]
-    public async Task CreateEmployee_ThrowsCompanyNotFound_WhenIncorrectCompanyId()
+    public async Task CreateEmployeeForCompany_ThrowsCompanyNotFound_WhenIncorrectCompanyId()
     {
         var incorrectCompanyId = Guid.NewGuid();
         var testEmployee = new EmployeeForCreationDto("TestName", Age: 18, "TestPosition");
@@ -221,7 +231,11 @@ public partial class ServiceManagerTests
         Assert.Throws<CompanyNotFoundException>(() =>
             _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
     }
+    
+    #endregion
 
+    #region Delete Employee For Company Tests
+    
     [Test]
     public async Task DeleteEmployeeForCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyIdPassed()
     {
@@ -273,7 +287,11 @@ public partial class ServiceManagerTests
         
         Assert.That(await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id), Is.False);
     }
+    
+    #endregion
 
+    #region Update Employee For Company Tests
+    
     [Test]
     public async Task UpdateEmployeeForCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
     {
@@ -313,7 +331,7 @@ public partial class ServiceManagerTests
     }
     
     [Test]
-    public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyAgeForChangePassed()
+    public async Task UpdateEmployeeForCompany_UpdatesAge_WhenOnlyAgeForChangePassed()
     {
         var expected = await _context.Employees.FirstAsync();
         var updateDto = new EmployeeForUpdateDto(Name:null, Age: 100, Position:null);
@@ -327,7 +345,7 @@ public partial class ServiceManagerTests
     }
     
     [Test]
-    public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyPositionForChangePassed()
+    public async Task UpdateEmployeeForCompany_UpdatesPosition_WhenOnlyPositionForChangePassed()
     {
         var expected = await _context.Employees.FirstAsync();
         var updateDto = new EmployeeForUpdateDto(Name:null, Age: -1, "UpdatedPosition");
@@ -378,4 +396,6 @@ public partial class ServiceManagerTests
         
         Assert.That(result, Is.EqualTo(expected));
     }
+    
+    #endregion
 }
