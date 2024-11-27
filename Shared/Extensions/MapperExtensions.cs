@@ -65,19 +65,11 @@ public static class MapperExtensions
             Position = employee.Position
         };
 
-    public static Employee MapToEntity(this EmployeeForUpdateDto employee) =>
-        new()
-        {
-            Name = employee.Name ?? string.Empty,
-            Age = employee.Age,
-            Position = employee.Position ?? string.Empty
-        };
-
     public static Employee UpdateEntity(this Employee employee, EmployeeForUpdateDto updateDto)
     {
-        employee.Name = string.IsNullOrEmpty(updateDto.Name) ? employee.Name : updateDto.Name.Trim();
+        employee.Name = string.IsNullOrWhiteSpace(updateDto.Name) ? employee.Name : updateDto.Name.Trim();
         employee.Age = updateDto.Age is < 199 and > 0 ? updateDto.Age : employee.Age;
-        employee.Position = string.IsNullOrEmpty(updateDto.Position) ? employee.Position : updateDto.Position.Trim();
+        employee.Position = string.IsNullOrWhiteSpace(updateDto.Position) ? employee.Position : updateDto.Position.Trim();
         
         return employee;
     }

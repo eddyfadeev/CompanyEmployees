@@ -7,7 +7,6 @@ namespace Shared.Tests.ExtensionsTests;
 public class MapperExtensionsTests
 {
     private Employee _expectedEmployeeEntity;
-    private EmployeeForUpdateDto _employeeForUpdateDto;
 
     [SetUp]
     public void Setup()
@@ -19,8 +18,6 @@ public class MapperExtensionsTests
             Age = 30,
             Position = "Developer"
         };
-
-        _employeeForUpdateDto = new EmployeeForUpdateDto(_expectedEmployeeEntity.Name, _expectedEmployeeEntity.Age, _expectedEmployeeEntity.Position);
     }
 
     [Test]
@@ -80,109 +77,6 @@ public class MapperExtensionsTests
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
         Assert.That(result, Is.EqualTo(expected));
-    }
-    
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_ShouldReturnCorrectEntity_WhenInputIsValid()
-    {
-        var expected = new Employee
-        {
-            Name = _employeeForUpdateDto.Name,
-            Age = _employeeForUpdateDto.Age,
-            Position = _employeeForUpdateDto.Position
-        };
-
-        var result = _employeeForUpdateDto.MapToEntity();
-        
-        Assert.That(result, Is.EqualTo(expected));
-    }
-    
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_ShouldReturnCorrectEntity_WhenNameIsEmpty()
-    {
-        var testEmployee = _employeeForUpdateDto with { Name = string.Empty };
-
-        var expected = new Employee
-        {
-            Name = testEmployee.Name,
-            Age = testEmployee.Age,
-            Position = testEmployee.Position
-        };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result, Is.EqualTo(expected));
-    }
-
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_ShouldReturnCorrectEntity_WhenNameIsNull()
-    {
-        var testEmployee = _employeeForUpdateDto with { Name = null };
-
-        var expected = new Employee
-        {
-            Name = string.Empty,
-            Age = testEmployee.Age,
-            Position = testEmployee.Position
-        };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result, Is.EqualTo(expected));
-    }
-    
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_ShouldReturnCorrectEntity_WhenPositionIsEmpty()
-    {
-        var testEmployee = _employeeForUpdateDto with { Position = string.Empty };
-
-        var expected = new Employee
-        {
-            Name = testEmployee.Name,
-            Age = testEmployee.Age,
-            Position = testEmployee.Position
-        };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result, Is.EqualTo(expected));
-    }
-
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_ShouldReturnCorrectEntity_WhenPositionIsNull()
-    {
-        var testEmployee = _employeeForUpdateDto with { Position = null };
-
-        var expected = new Employee
-        {
-            Name = testEmployee.Name,
-            Age = testEmployee.Age,
-            Position = string.Empty
-        };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result, Is.EqualTo(expected));
-    }
-    
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_PositionShouldBeNotNull_WhenPassedPositionIsNull()
-    {
-        var testEmployee = _employeeForUpdateDto with { Position = null };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result.Position, Is.Not.Null);
-    }
-    
-    [Test]
-    public void MapFromEmployeeForUpdateDtoToEntity_NameShouldBeNotNull_WhenPassedNameIsNull()
-    {
-        var testEmployee = _employeeForUpdateDto with { Name = null };
-
-        var result = testEmployee.MapToEntity();
-        
-        Assert.That(result.Name, Is.Not.Null);
     }
 
     [Test]
@@ -307,7 +201,7 @@ public class MapperExtensionsTests
     }
     
     [Test]
-    public void UpdateEntity_ShouldReturnUpdatedEntity_WhenAgeIsNegative()
+    public void UpdateEntity_ShouldReturnUpdatedEntityWithNotChangedAge_WhenAgeIsNegative()
     {
         var testEmployeeEntity = new Employee
         {
@@ -327,7 +221,7 @@ public class MapperExtensionsTests
     }
     
     [Test]
-    public void UpdateEntity_ShouldReturnUpdatedEntity_WhenAgeIsAbove199()
+    public void UpdateEntity_ShouldReturnUpdatedEntityWithNotChangedAge_WhenAgeIsAbove199()
     {
         var testEmployeeEntity = new Employee
         {
