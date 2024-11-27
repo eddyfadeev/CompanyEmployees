@@ -13,6 +13,7 @@ public class Employee
     public string? Name { get; set; }
     
     [Required(ErrorMessage = "Age is required.")]
+    [Range(1, 199, ErrorMessage = "Age must be between 1 and 199.")]
     public int Age { get; set; }
     
     [Required(ErrorMessage = "Position is required.")]
