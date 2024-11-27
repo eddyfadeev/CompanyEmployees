@@ -344,4 +344,56 @@ public partial class ServiceManagerTests
         
         Assert.That(result.ids, Is.EquivalentTo(expected));
     }
+
+    [Test]
+    public async Task DeleteCompany_ThrowsCompanyNotFoundException_WhenIncorrectIdPassed()
+    {
+        var incorrectId = Guid.NewGuid();
+
+        Assert.Throws<CompanyNotFoundException>(() =>
+            _companyService.CompanyService.DeleteCompany(incorrectId, trackChanges: false));
+    }
+    
+    [Test]
+    public async Task DeleteCompany_SuccessfullyDeletesCompany()
+    {
+        var testCompany = new Company
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test company name",
+            Address = "Test address",
+            Country = "Test country"
+        };
+        await _context.Database.EnsureDeletedAsync();
+        await _context.Companies.AddAsync(testCompany);
+        await _context.SaveChangesAsync();
+
+        _companyService.CompanyService.DeleteCompany(testCompany.Id, trackChanges: true);
+        
+        Assert.That(await _context.Companies.AnyAsync(c => c.Id == testCompany.Id), Is.False);
+    }
+    
+    [Test]
+    public async Task DeleteCompany_SuccessfullyDeletesChildren()
+    {
+        var testCompany = _companies.ElementAt(0);
+        
+        _companyService.CompanyService.DeleteCompany(testCompany.Id, trackChanges: true);
+        
+        Assert.That(await _context.Employees.AnyAsync(c => c.CompanyId == testCompany.Id), Is.False);
+    }
+    
+    [Test]
+    public async Task DeleteCompany_DoesNotDeleteOtherCompaniesChildren()
+    {
+        var testCompany = _companies.ElementAt(0);
+        var expected = await _context.Employees.Where(e => 
+            e.CompanyId != testCompany.Id)
+            .ToListAsync();
+        
+        _companyService.CompanyService.DeleteCompany(testCompany.Id, trackChanges: true);
+        var result = await _context.Employees.ToListAsync();
+        
+        Assert.That(result, Is.EquivalentTo(expected));
+    }
 }
