@@ -88,9 +88,9 @@ public static class MapperExtensions
     
     public static Employee PatchEntity(this Employee employee, EmployeeForUpdateDto updateDto)
     {
-        employee.Name = updateDto.Name;
+        employee.Name = string.IsNullOrEmpty(updateDto.Name) ? string.Empty : updateDto.Name;
         employee.Age = updateDto.Age < 0 ? 0 : updateDto.Age;
-        employee.Position = updateDto.Position;
+        employee.Position = string.IsNullOrEmpty(updateDto.Position) ? string.Empty : updateDto.Position;
 
         return employee;
     }
