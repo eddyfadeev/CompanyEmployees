@@ -64,4 +64,12 @@ public static class MapperExtensions
             Age = employee.Age,
             Position = employee.Position
         };
+
+    public static Employee MapToEntity(this EmployeeForUpdateDto employee) =>
+        new()
+        {
+            Name = employee.Name ?? string.Empty,
+            Age = employee.Age,
+            Position = employee.Position ?? string.Empty
+        };
 }
