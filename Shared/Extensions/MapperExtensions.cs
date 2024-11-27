@@ -85,4 +85,13 @@ public static class MapperExtensions
 
         return company;
     }
+    
+    public static Employee PatchEntity(this Employee employee, EmployeeForUpdateDto updateDto)
+    {
+        employee.Name = updateDto.Name;
+        employee.Age = updateDto.Age < 0 ? 0 : updateDto.Age;
+        employee.Position = updateDto.Position;
+
+        return employee;
+    }
 }
