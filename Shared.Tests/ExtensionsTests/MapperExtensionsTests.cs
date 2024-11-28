@@ -357,16 +357,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            "UpdatedAddress", 
-            "UpdatedCountry",
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress", 
+            Country = "UpdatedCountry",
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;
@@ -390,16 +391,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            Name: null, 
-            "UpdatedAddress", 
-            "UpdatedCountry",
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = null, 
+            Address = "UpdatedAddress", 
+            Country = "UpdatedCountry",
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Address = testCompanyDto.Address;
         _expectedCompanyEntity.Country = testCompanyDto.Country;
@@ -422,16 +424,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            Address: null, 
-            "UpdatedCountry",
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = null, 
+            Country = "UpdatedCountry",
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Country = testCompanyDto.Country;
@@ -454,16 +457,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            "UpdatedAddress", 
-            Country: null,
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress", 
+            Country = null,
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;
@@ -486,12 +490,13 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            "UpdatedAddress", 
-            "UpdatedCountry",
-            Employees: null
-        );
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress", 
+            Country = "UpdatedCountry",
+            Employees = null
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;
@@ -514,16 +519,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            Name: string.Empty, 
-            "UpdatedAddress", 
-            "UpdatedCountry",
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty, 
+            Address = "UpdatedAddress", 
+            Country = "UpdatedCountry",
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Address = testCompanyDto.Address;
         _expectedCompanyEntity.Country = testCompanyDto.Country;
@@ -546,16 +552,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            Address: string.Empty, 
-            "UpdatedCountry",
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = string.Empty, 
+            Country = "UpdatedCountry",
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Country = testCompanyDto.Country;
@@ -578,16 +585,17 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            "UpdatedAddress", 
-            Country: string.Empty,
-            Employees:
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress", 
+            Country = string.Empty,
+            Employees =
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
                 new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
-        );
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;
@@ -610,12 +618,13 @@ public class MapperExtensionsTests
             Employees = _expectedCompanyEntity.Employees
         };
         
-        var testCompanyDto = new CompanyForUpdateDto(
-            "UpdatedName", 
-            "UpdatedAddress", 
-            "UpdatedCountry",
-            Employees: []
-        );
+        var testCompanyDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress", 
+            Country = "UpdatedCountry",
+            Employees = []
+        };
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;

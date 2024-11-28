@@ -447,8 +447,12 @@ public partial class ServiceManagerTests
     [Test]
     public async Task UpdateCompany_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
     {
-        var companyForUpdate = new CompanyForUpdateDto(
-            "UpdatedName", "UpdatedAddress", "UpdatedCountry", Employees: []);
+        var companyForUpdate = new CompanyForUpdateDto{
+            Name = "UpdatedName", 
+            Address = "UpdatedAddress",
+            Country = "UpdatedCountry", 
+            Employees = []
+        };
         var incorrectCompanyId = Guid.NewGuid();
         
         Assert.Throws<CompanyNotFoundException>(() =>
@@ -459,8 +463,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_UpdatesName_WhenOnlyNameForChangePassed()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            "UpdatedName", Address: string.Empty, Country: string.Empty, Employees: []);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Address = string.Empty, 
+            Country = string.Empty, 
+            Employees = []
+        };
         
         expected.Name = testUpdateDto.Name;
 
@@ -474,8 +483,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_UpdatesAddress_WhenOnlyAddressForChangePassed()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: string.Empty, "UpdatedAddress", Country: string.Empty, Employees: []);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty, 
+            Address = "UpdatedAddress",
+            Country = string.Empty,
+            Employees = []
+        };
         
         expected.Address = testUpdateDto.Address;
 
@@ -489,8 +503,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_UpdatesCountry_WhenOnlyCountryForChangePassed()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: string.Empty, Address: string.Empty, "UpdatedCountry", Employees: []);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty,
+            Address = string.Empty,
+            Country = "UpdatedCountry",
+            Employees = []
+        };
         
         expected.Country = testUpdateDto.Country;
 
@@ -504,12 +523,17 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_UpdatesEmployees_WhenOnlyEmployeesForChangePassed()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: 
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty,
+            Address = string.Empty, 
+            Country = string.Empty, 
+            Employees = 
             [
                 new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" },
                 new EmployeeForCreationDto{ Name = "Test2", Age = 2, Position = "Test2" }
-            ]);
+            ]
+        };
 
         expected.Employees = testUpdateDto!.Employees.Select(e => e.MapToEntity()).ToList();
 
@@ -523,8 +547,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Nulls()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: null, Address: null, Country: null, Employees: null);
+        var testUpdateDto = new CompanyForUpdateDto 
+        {
+            Name = null,
+            Address = null, 
+            Country = null, 
+            Employees = null 
+        };
 
         _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
         var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
@@ -536,8 +565,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyStringEmptyCollection()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: []);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty,
+            Address = string.Empty,
+            Country = string.Empty,
+            Employees = []
+        };
 
         _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
         var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
@@ -549,8 +583,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyStringNullCollection()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: null);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = string.Empty,
+            Address = string.Empty,
+            Country = string.Empty,
+            Employees = null
+        };
 
         _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
         var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
@@ -562,8 +601,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_WhitespaceEmptyCollection()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: " ", Address: " ", Country: " ", Employees: []);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = " ",
+            Address = " ",
+            Country = " ",
+            Employees = []
+        };
 
         _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
         var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
@@ -575,8 +619,13 @@ public partial class ServiceManagerTests
     public async Task UpdateCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_WhitespaceNullCollection()
     {
         var expected = await _context.Companies.FirstAsync();
-        var testUpdateDto = new CompanyForUpdateDto(
-            Name: " ", Address: " ", Country: " ", Employees: null);
+        var testUpdateDto = new CompanyForUpdateDto
+        {
+            Name = " ",
+            Address = " ",
+            Country = " ",
+            Employees = null
+        };
 
         _companyService.CompanyService.UpdateCompany(expected.Id, testUpdateDto, trackChanges: true);
         var result = await _context.Companies.FirstAsync(e => e.Id.Equals(expected.Id));
