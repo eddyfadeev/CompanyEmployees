@@ -57,9 +57,9 @@ public class CompaniesController : ControllerBase
     }
     
     [HttpPost("collection")]
-    public async Task<IActionResult> CreateCompanyCollection([FromBody]IEnumerable<CompanyForCreationDto> companyCollection)
+    public async Task<IActionResult> CreateCompanyCollection([FromBody]IEnumerable<CompanyForCreationDto>? companyCollection)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || companyCollection is null || !companyCollection.Any())
         {
             return UnprocessableEntity(ModelState);
         }
