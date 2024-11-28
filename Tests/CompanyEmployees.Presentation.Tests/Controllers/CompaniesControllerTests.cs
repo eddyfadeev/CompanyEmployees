@@ -100,13 +100,12 @@ public class CompaniesControllerTests
     [Test]
     public async Task GetCompanyCollection_ReturnsOkResult()
     {
+        Guid[] ids = [Guid.NewGuid(), Guid.NewGuid()];
         var companies = new List<CompanyDto>
         {
-            new CompanyDto { Id = Guid.NewGuid(), Name = "Test Company 1" },
-            new CompanyDto { Id = Guid.NewGuid(), Name = "Test Company 2" }
+            new () { Id = ids[0], Name = "Test Company 1" },
+            new () { Id = ids[1], Name = "Test Company 2" }
         };
-
-        var ids = companies.Select(c => c.Id);
 
         _mockCompanyService
             .Setup(s => s.GetByIds(It.IsAny<IEnumerable<Guid>>(), It.IsAny<bool>()))
@@ -120,13 +119,12 @@ public class CompaniesControllerTests
     [Test]
     public async Task GetCompanyCollection_ReturnsOkResult_WithListOfCompanyDtos()
     {
+        Guid[] ids = [Guid.NewGuid(), Guid.NewGuid()];
         var companies = new List<CompanyDto>
         {
-            new CompanyDto { Id = Guid.NewGuid(), Name = "Test Company 1" },
-            new CompanyDto { Id = Guid.NewGuid(), Name = "Test Company 2" }
+            new () { Id = ids[0], Name = "Test Company 1" },
+            new () { Id = ids[1], Name = "Test Company 2" }
         };
-
-        var ids = companies.Select(c => c.Id);
 
         _mockCompanyService
             .Setup(s => s.GetByIds(It.IsAny<IEnumerable<Guid>>(), It.IsAny<bool>()))
