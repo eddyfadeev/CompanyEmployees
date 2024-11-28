@@ -33,12 +33,12 @@ public static class MapperExtensions
         };
     
     public static EmployeeForCreationDto MapToEmployeeForCreationDto(this Employee employee) =>
-        new 
-        (
-            Name: employee.Name ?? string.Empty,
-            Age: employee.Age,
-            Position: employee.Position ?? string.Empty
-        );
+        new ()
+        {
+            Name = employee.Name ?? string.Empty,
+            Age = employee.Age,
+            Position = employee.Position ?? string.Empty
+        };
     
     public static EmployeeForUpdateDto MapToEmployeeForUpdateDto(this Employee employee) =>
         new 
