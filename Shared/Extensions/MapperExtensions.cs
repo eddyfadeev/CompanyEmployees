@@ -6,7 +6,7 @@ namespace Shared.Extensions;
 public static class MapperExtensions
 {
     public static CompanyDto MapToCompanyDto(this Company company) =>
-        new ()
+        new()
         {
             Id = company.Id,
             Name = company.Name ?? string.Empty,
@@ -15,15 +15,15 @@ public static class MapperExtensions
 
     public static CompanyForCreationDto MapToCompanyForCreationDto(
         this Company company, params IEnumerable<EmployeeForCreationDto> optionalEmployees) =>
-        new
-        (
-            Name: company.Name ?? string.Empty,
-            Address: company.Address ?? string.Empty,
-            Country: company.Country ?? string.Empty,
-            Employees: optionalEmployees
-        );
-    
-    public static EmployeeDto MapToEmployeeDto(this Employee employee) =>
+        new ()
+        {
+            Name = company!.Name,
+            Address = company!.Address,
+            Country = company.Country,
+            Employees = optionalEmployees
+        };
+
+public static EmployeeDto MapToEmployeeDto(this Employee employee) =>
         new ()
         {
             Id = employee.Id,
@@ -41,12 +41,12 @@ public static class MapperExtensions
         };
     
     public static EmployeeForUpdateDto MapToEmployeeForUpdateDto(this Employee employee) =>
-        new 
-        (
-            Name: employee.Name ?? string.Empty,
-            Age: employee.Age,
-            Position: employee.Position ?? string.Empty
-        );
+        new ()
+        {
+            Name = employee.Name ?? string.Empty,
+            Age = employee.Age,
+            Position = employee.Position ?? string.Empty
+        };
 
     public static Company MapToEntity(this CompanyForCreationDto company) =>
         new ()
