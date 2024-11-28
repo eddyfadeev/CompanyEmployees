@@ -302,7 +302,12 @@ public partial class ServiceManagerTests
     {
         var testEmployee = await _context.Employees.FirstAsync();
         var incorrectCompanyId = Guid.NewGuid();
-        var updateDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 10, 
+            Position = "UpdatedPosition"
+        };
         
         Assert.Throws<CompanyNotFoundException>(() =>
             _companyService.EmployeeService.UpdateEmployeeForCompany(
@@ -314,7 +319,12 @@ public partial class ServiceManagerTests
     {
         var testCompany = await _context.Companies.FirstAsync();
         var incorrectEmployeeId = Guid.NewGuid();
-        var updateDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 10,
+            Position = "UpdatedPosition"
+        };
         
         Assert.Throws<EmployeeNotFoundException>(() =>
             _companyService.EmployeeService.UpdateEmployeeForCompany(
@@ -325,7 +335,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_UpdatesName_WhenOnlyNameForChangePassed()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto("UpdatedName", Age:-1, Position:null);
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = -1, 
+            Position = null
+        };
         expected.Name = updateDto.Name;
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
@@ -339,7 +354,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_UpdatesAge_WhenOnlyAgeForChangePassed()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto(Name:null, Age: 100, Position:null);
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = null, 
+            Age = 100, 
+            Position = null
+        };
         expected.Age = updateDto.Age;
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
@@ -353,7 +373,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_UpdatesPosition_WhenOnlyPositionForChangePassed()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto(Name:null, Age: -1, "UpdatedPosition");
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = null,
+            Age = -1,
+            Position = "UpdatedPosition"
+        };
         expected.Age = updateDto.Age;
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
@@ -367,7 +392,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Nulls()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto(Name:null, Age: -1, null);
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = null, 
+            Age = -1, 
+            Position = null
+        };
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
@@ -380,7 +410,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_EmptyString()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto(Name:string.Empty, Age: -1, string.Empty);
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = string.Empty, 
+            Age = -1,
+            Position = string.Empty
+        };
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
@@ -393,7 +428,12 @@ public partial class ServiceManagerTests
     public async Task UpdateEmployeeForCompany_DoesNotUpdatesEntry_WhenIncorrectArgumentsArePassed_Whitespace()
     {
         var expected = await _context.Employees.FirstAsync();
-        var updateDto = new EmployeeForUpdateDto(Name:" ", Age: -1, Position:" ");
+        var updateDto = new EmployeeForUpdateDto
+        {
+            Name = " ", 
+            Age = -1, 
+            Position = " "
+        };
 
         _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
@@ -462,7 +502,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenCalled()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age =  20,
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -478,7 +523,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenCalledWithNegativeAge_AgeShouldBeZero()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", -1, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age =  -1,
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = 0;
@@ -494,7 +544,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenCalledWithZeroAge_AgeShouldBeZero()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 0, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 0, 
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -510,7 +565,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenNameIsNull_NameShouldBeEmpty()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: null, 20, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = null, 
+            Age =  20, 
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = string.Empty;
         expected.Age = testPatchDto.Age;
@@ -526,7 +586,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenNameIsEmpty_NameShouldBeEmpty()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: string.Empty, 20, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = string.Empty,
+            Age =  20, 
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -542,7 +607,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenNameIsWhitespace_NameShouldBeWhitespace()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: " ", 20, "UpdatedPosition");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = " ", 
+            Age =  20, 
+            Position = "UpdatedPosition"
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -558,7 +628,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsWhitespace_PositionShouldBeWhitespace()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, " ");
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 20,
+            Position = " "
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -574,7 +649,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsEmpty_PositionShouldBeEmpty()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, string.Empty);
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 20,
+            Position = string.Empty
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;
@@ -590,7 +670,12 @@ public partial class ServiceManagerTests
     public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsNull_PositionShouldBeEmpty()
     {
         var expected = await _context.Employees.FirstAsync();
-        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, Position: null);
+        var testPatchDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 20, 
+            Position = null
+        };
 
         expected.Name = testPatchDto.Name;
         expected.Age = testPatchDto.Age;

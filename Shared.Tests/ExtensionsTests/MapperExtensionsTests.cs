@@ -35,8 +35,12 @@ public class MapperExtensionsTests
     [Test]
     public void MapToEmployeeForUpdateDto_ShouldReturnCorrectDto_WhenInputIsValid()
     {
-        var expected = new EmployeeForUpdateDto(
-            _expectedEmployeeEntity.Name, _expectedEmployeeEntity.Age, _expectedEmployeeEntity.Position);
+        var expected = new EmployeeForUpdateDto
+        {
+            Name = _expectedEmployeeEntity.Name, 
+            Age = _expectedEmployeeEntity.Age, 
+            Position = _expectedEmployeeEntity.Position 
+        };
 
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
@@ -47,8 +51,12 @@ public class MapperExtensionsTests
     public void MapToEmployeeForUpdateDto_ShouldReturnCorrectDto_WhenNameIsEmpty()
     {
         _expectedEmployeeEntity.Name = string.Empty;
-        var expected = new EmployeeForUpdateDto(
-            _expectedEmployeeEntity.Name, _expectedEmployeeEntity.Age, _expectedEmployeeEntity.Position);
+        var expected = new EmployeeForUpdateDto
+        {
+            Name = _expectedEmployeeEntity.Name, 
+            Age = _expectedEmployeeEntity.Age, 
+            Position = _expectedEmployeeEntity.Position
+        };
 
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
@@ -59,8 +67,12 @@ public class MapperExtensionsTests
     public void MapToEmployeeForUpdateDto_ShouldReturnCorrectDto_WhenNameIsNull()
     {
         _expectedEmployeeEntity.Name = null;
-        var expected = new EmployeeForUpdateDto(
-            Name:string.Empty, _expectedEmployeeEntity.Age, _expectedEmployeeEntity.Position);
+        var expected = new EmployeeForUpdateDto
+        {
+            Name = string.Empty, 
+            Age = _expectedEmployeeEntity.Age, 
+            Position = _expectedEmployeeEntity.Position 
+        };
 
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
@@ -71,8 +83,12 @@ public class MapperExtensionsTests
     public void MapToEmployeeForUpdateDto_ShouldReturnCorrectDto_WhenPositionIsEmpty()
     {
         _expectedEmployeeEntity.Position = string.Empty;
-        var expected = new EmployeeForUpdateDto(
-            _expectedEmployeeEntity.Name, _expectedEmployeeEntity.Age, _expectedEmployeeEntity.Position);
+        var expected = new EmployeeForUpdateDto
+        {
+            Name = _expectedEmployeeEntity.Name, 
+            Age = _expectedEmployeeEntity.Age, 
+            Position = _expectedEmployeeEntity.Position
+        };
 
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
@@ -83,8 +99,12 @@ public class MapperExtensionsTests
     public void MapToEmployeeForUpdateDto_ShouldReturnCorrectDto_WhenPositionIsNull()
     {
         _expectedEmployeeEntity.Position = null;
-        var expected = new EmployeeForUpdateDto(
-            _expectedEmployeeEntity.Name, _expectedEmployeeEntity.Age, Position:string.Empty);
+        var expected = new EmployeeForUpdateDto
+        {
+            Name = _expectedEmployeeEntity.Name, 
+            Age = _expectedEmployeeEntity.Age, 
+            Position = string.Empty
+        };
 
         var result = _expectedEmployeeEntity.MapToEmployeeForUpdateDto();
         
@@ -106,7 +126,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 99, 
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -127,7 +152,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto(Name: null, 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = null, 
+            Age = 99,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -147,7 +177,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: null);
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 99, 
+            Position = null
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
 
@@ -167,7 +202,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto(Name: string.Empty, 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = string.Empty,
+            Age = 99,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -187,7 +227,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: string.Empty);
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 99, 
+            Position = string.Empty
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
 
@@ -207,7 +252,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 0, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 0,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -227,7 +277,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", -1, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = -1,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -247,7 +302,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 200, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 200,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -267,7 +327,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 199, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 199,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
 
@@ -526,7 +591,7 @@ public class MapperExtensionsTests
         
         _expectedCompanyEntity.Name = testCompanyDto.Name;
         _expectedCompanyEntity.Address = testCompanyDto.Address;
-        _expectedCompanyEntity.Employees = testCompanyDto.Employees.Select(e => e.MapToEntity()).ToList();
+        _expectedCompanyEntity.Employees = testCompanyDto.Employees!.Select(e => e.MapToEntity()).ToList();
 
         var result = testCompanyEntity.UpdateEntity(testCompanyDto);
         
@@ -576,7 +641,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 99, 
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -597,7 +667,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto(Name: null, 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = null, 
+            Age = 99,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = string.Empty;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -618,7 +693,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: null);
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 99, 
+            Position = null
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = string.Empty;
@@ -639,7 +719,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto(string.Empty, 99, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = string.Empty, 
+            Age = 99, 
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -660,7 +745,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 99, Position: string.Empty);
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 99,
+            Position = string.Empty
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -681,7 +771,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 0, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName",
+            Age = 0,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -702,7 +797,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", -1, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = -1,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = 0;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;
@@ -723,7 +823,12 @@ public class MapperExtensionsTests
             Position = _expectedEmployeeEntity.Position
         };
         
-        var testEmployeeDto = new EmployeeForUpdateDto("UpdatedName", 10, "UpdatedPosition");
+        var testEmployeeDto = new EmployeeForUpdateDto
+        {
+            Name = "UpdatedName", 
+            Age = 10,
+            Position = "UpdatedPosition"
+        };
         _expectedEmployeeEntity.Name = testEmployeeDto.Name;
         _expectedEmployeeEntity.Age = testEmployeeDto.Age;
         _expectedEmployeeEntity.Position = testEmployeeDto.Position;

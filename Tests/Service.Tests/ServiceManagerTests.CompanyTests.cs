@@ -64,7 +64,12 @@ public partial class ServiceManagerTests
     [Test]
     public async Task CreateCompany_ReturnsCompanyDto_WhenCompanyCreated()
     {
-        var dtoToCreate = new CompanyForCreationDto("Name", "Address", "Country");
+        var dtoToCreate = new CompanyForCreationDto
+        {
+            Name = "Name", 
+            Address = "Address", 
+            Country = "Country"
+        };
         
         var result = _companyService.CompanyService.CreateCompany(dtoToCreate);
         
@@ -79,7 +84,12 @@ public partial class ServiceManagerTests
             Name = "Create Test"
         };
         var expectedDto = testCompany.MapToCompanyDto();
-        var dtoToCreate = new CompanyForCreationDto(testCompany.Name, Address: string.Empty, Country: string.Empty);
+        var dtoToCreate = new CompanyForCreationDto
+        {
+            Name = testCompany.Name, 
+            Address = string.Empty, 
+            Country = string.Empty
+        };
         
         var result = _companyService.CompanyService.CreateCompany(dtoToCreate);
         
@@ -95,7 +105,12 @@ public partial class ServiceManagerTests
             Country = "Canada"
         };
         var expectedDto = testCompany.MapToCompanyDto();
-        var dtoToCreate = new CompanyForCreationDto(Name: string.Empty, testCompany.Address, testCompany.Country);
+        var dtoToCreate = new CompanyForCreationDto
+        {
+            Name = string.Empty,
+            Address = testCompany.Address,
+            Country = testCompany.Country
+        };
         
         var result = _companyService.CompanyService.CreateCompany(dtoToCreate);
         
@@ -105,7 +120,12 @@ public partial class ServiceManagerTests
     [Test]
     public async Task CreateCompany_ReturnsDtoWithCorrectId_WhenCompanyCreated()
     {
-        var testCompany = new CompanyForCreationDto("Test", string.Empty, string.Empty);
+        var testCompany = new CompanyForCreationDto
+        {
+            Name = "Test", 
+            Address = string.Empty, 
+            Country = string.Empty
+        };
 
         var result = _companyService.CompanyService.CreateCompany(testCompany);
         
@@ -122,11 +142,13 @@ public partial class ServiceManagerTests
         var expectedEmployees = testEmployees.Select(e => 
             e.MapToEmployeeForCreationDto())
             .ToList();
-        var testCompany = new CompanyForCreationDto(
-            Name: "TestName", 
-            Address: string.Empty, 
-            Country: string.Empty, 
-            Employees: testEmployees.Select(e => e.MapToEmployeeForCreationDto()));
+        var testCompany = new CompanyForCreationDto
+        {
+            Name = "TestName",
+            Address = string.Empty,
+            Country = string.Empty,
+            Employees = testEmployees.Select(e => e.MapToEmployeeForCreationDto())
+        };
 
         await _context.Database.EnsureDeletedAsync();
         _companyService.CompanyService.CreateCompany(testCompany);
@@ -143,11 +165,13 @@ public partial class ServiceManagerTests
     {
         List<EmployeeForCreationDto> emptyEmployeesList = new ();
         
-        var testCompany = new CompanyForCreationDto(
-            Name: "TestName", 
-            Address: string.Empty, 
-            Country: string.Empty, 
-            Employees: emptyEmployeesList);
+        var testCompany = new CompanyForCreationDto
+        {
+            Name = "TestName",
+            Address = string.Empty,
+            Country = string.Empty,
+            Employees = emptyEmployeesList
+        };
 
         await _context.Database.EnsureDeletedAsync();
         _companyService.CompanyService.CreateCompany(testCompany);
