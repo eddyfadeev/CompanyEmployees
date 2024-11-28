@@ -398,4 +398,204 @@ public partial class ServiceManagerTests
     }
     
     #endregion
+
+    #region Get Employee For Patch Tests
+
+    [Test]
+    public async Task GetEmployeeForPatch_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
+    {
+        var testEmployee = await _context.Employees.FirstAsync();
+        var incorrectCompanyId = Guid.NewGuid();
+        
+        Assert.Throws<CompanyNotFoundException>(() =>
+            _companyService.EmployeeService.GetEmployeeForPatch(
+                incorrectCompanyId, testEmployee.Id, trackCompanyChanges: false, trackEmployeeChanges: false));
+    }
+    
+    [Test]
+    public async Task GetEmployeeForPatch_ThrowsEmployeeNotFoundException_WhenIncorrectCompanyId()
+    {
+        var testCompany = await _context.Companies.FirstAsync();
+        var incorrectEmployeeId = Guid.NewGuid();
+        
+        Assert.Throws<EmployeeNotFoundException>(() =>
+            _companyService.EmployeeService.GetEmployeeForPatch(
+                testCompany.Id, incorrectEmployeeId, trackCompanyChanges: false, trackEmployeeChanges: false));
+    }
+
+    [Test]
+    public async Task GetEmployeeForPatch_ReturnsCorrectEmployeeForUpdateDto_WhenPassedCorrectArguments()
+    {
+        var testEmployee = await _context.Employees.FirstAsync();
+        var expected = testEmployee.MapToEmployeeForUpdateDto();
+
+        _companyService.EmployeeService.GetEmployeeForPatch(
+            testEmployee.CompanyId, testEmployee.Id, trackCompanyChanges: false, trackEmployeeChanges: false);
+        var entityFromDb = await _context.Employees.FirstAsync(e => e.Id.Equals(testEmployee.Id));
+        var result = entityFromDb.MapToEmployeeForUpdateDto();
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task GetEmployeeForPatch_ReturnsCorrectEmployee_WhenPassedCorrectArguments()
+    {
+        var expected = await _context.Employees.FirstAsync();
+
+        _companyService.EmployeeService.GetEmployeeForPatch(
+            expected.CompanyId, expected.Id, trackCompanyChanges: false, trackEmployeeChanges: false);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    #endregion
+
+    #region Save Changes For Patch
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenCalled()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, "UpdatedPosition");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenCalledWithNegativeAge_AgeShouldBeZero()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", -1, "UpdatedPosition");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = 0;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenCalledWithZeroAge_AgeShouldBeZero()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 0, "UpdatedPosition");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenNameIsNull_NameShouldBeEmpty()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: null, 20, "UpdatedPosition");
+
+        expected.Name = string.Empty;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenNameIsEmpty_NameShouldBeEmpty()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: string.Empty, 20, "UpdatedPosition");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenNameIsWhitespace_NameShouldBeWhitespace()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: " ", 20, "UpdatedPosition");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsWhitespace_PositionShouldBeWhitespace()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, " ");
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsEmpty_PositionShouldBeEmpty()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, string.Empty);
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = testPatchDto.Position;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task SaveChangesForPatch_SavesToDb_WhenPositionIsNull_PositionShouldBeEmpty()
+    {
+        var expected = await _context.Employees.FirstAsync();
+        var testPatchDto = new EmployeeForUpdateDto(Name: "UpdatedName", 20, Position: null);
+
+        expected.Name = testPatchDto.Name;
+        expected.Age = testPatchDto.Age;
+        expected.Position = string.Empty;
+
+        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    #endregion
 }
