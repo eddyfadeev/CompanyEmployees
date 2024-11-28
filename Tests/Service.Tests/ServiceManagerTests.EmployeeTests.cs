@@ -14,13 +14,12 @@ public partial class ServiceManagerTests
     public async Task GetEmployees_ReturnsEmployeesList_WhenCorrectCompanyId()
     {
         var company = await _context.Companies.FirstAsync();
-        var expected = _context.Employees.Where(e => 
+        var expected = await _context.Employees.Where(e => 
             e.CompanyId.Equals(company.Id))
             .Select(e => e.MapToEmployeeDto())
-            .AsEnumerable();
+            .ToListAsync();
 
-        var result = await Task.Run(() => 
-            _companyService.EmployeeService.GetEmployees(company.Id, trackChanges: false));
+        var result = await _companyService.EmployeeService.GetEmployees(company.Id, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -38,12 +37,12 @@ public partial class ServiceManagerTests
         };
         await _context.Companies.AddAsync(companyToCreate);
         await _context.SaveChangesAsync();
-        var expected = _context.Employees
+        var expected = await _context.Employees
             .Where(e => e.CompanyId == companyToCreate.Id)
             .Select(e => e.MapToEmployeeDto())
-            .AsEnumerable();
+            .ToListAsync();
 
-        var result = _companyService.EmployeeService.GetEmployees(companyToCreate.Id, trackChanges: false);
+        var result = await _companyService.EmployeeService.GetEmployees(companyToCreate.Id, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -53,8 +52,8 @@ public partial class ServiceManagerTests
     {
         var incorrectCompanyId = Guid.NewGuid();
 
-        Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.GetEmployees(incorrectCompanyId, trackChanges: false));
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
+            await _companyService.EmployeeService.GetEmployees(incorrectCompanyId, trackChanges: false));
     }
 
     #endregion
@@ -67,7 +66,7 @@ public partial class ServiceManagerTests
         var test = await _context.Employees.FirstAsync();
         var expected = test.MapToEmployeeDto();
 
-        var result = _companyService.EmployeeService.GetEmployee(test.CompanyId, test.Id, trackChanges: false);
+        var result = await _companyService.EmployeeService.GetEmployee(test.CompanyId, test.Id, trackChanges: false);
         
         Assert.That(result, Is.EqualTo(expected));
     }
@@ -78,8 +77,8 @@ public partial class ServiceManagerTests
         var test = await _context.Employees.FirstAsync();
         var incorrectCompanyId = Guid.NewGuid();
 
-        Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.GetEmployee(incorrectCompanyId, test.Id, trackChanges: false));
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
+            await _companyService.EmployeeService.GetEmployee(incorrectCompanyId, test.Id, trackChanges: false));
     }
 
     [Test]
@@ -88,8 +87,8 @@ public partial class ServiceManagerTests
         var test = await _context.Companies.FirstAsync();
         var incorrectEmployeeId = Guid.NewGuid();
 
-        Assert.Throws<EmployeeNotFoundException>(() =>
-            _companyService.EmployeeService.GetEmployee(test.Id, incorrectEmployeeId, trackChanges: false));
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
+            await _companyService.EmployeeService.GetEmployee(test.Id, incorrectEmployeeId, trackChanges: false));
     }
 
     [Test]
@@ -104,7 +103,7 @@ public partial class ServiceManagerTests
         };
         
         var result =
-            _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+            await _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result, Is.TypeOf<EmployeeDto>());
     }
@@ -134,7 +133,7 @@ public partial class ServiceManagerTests
             Position = string.Empty
         };
 
-    var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+        var result = await _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
 
         var expected = await _context.Employees.FirstAsync(e => e.CompanyId.Equals(testCompany.Id));
         
@@ -163,7 +162,7 @@ public partial class ServiceManagerTests
             Position = string.Empty
         };
         
-        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+        var result = await _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Name, Is.EqualTo(expectedName));
     }
@@ -190,7 +189,7 @@ public partial class ServiceManagerTests
             Position = string.Empty
         };
         
-        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+        var result = await _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Age, Is.EqualTo(expectedAge));
     }
@@ -217,7 +216,7 @@ public partial class ServiceManagerTests
             Position = expectedPosition
         };
         
-        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+        var result = await _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
         Assert.That(result.Position, Is.EqualTo(expectedPosition));
     }
@@ -233,8 +232,8 @@ public partial class ServiceManagerTests
             Position = "TestPosition"
         };
 
-        Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
+            await _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
     }
     
     #endregion
@@ -247,8 +246,8 @@ public partial class ServiceManagerTests
         var incorrectCompanyId = Guid.NewGuid();
         var existentEmployee = await _context.Employees.FirstAsync();
 
-        Assert.Throws<CompanyNotFoundException>(() => 
-            _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, existentEmployee.Id, trackChanges: false));
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () => 
+            await _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, existentEmployee.Id, trackChanges: false));
     }
     
     [Test]
@@ -257,8 +256,8 @@ public partial class ServiceManagerTests
         var incorrectCompanyId = Guid.NewGuid();
         var incorrectEmployeeId = Guid.NewGuid();
 
-        Assert.Throws<CompanyNotFoundException>(() => 
-            _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, incorrectEmployeeId, trackChanges: false));
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () => 
+            await _companyService.EmployeeService.DeleteEmployeeForCompany(incorrectCompanyId, incorrectEmployeeId, trackChanges: false));
     }
     
     [Test]
@@ -267,8 +266,8 @@ public partial class ServiceManagerTests
         var company = await _context.Companies.FirstAsync();
         var incorrectEmployeeId = Guid.NewGuid();
 
-        Assert.Throws<EmployeeNotFoundException>(() => 
-            _companyService.EmployeeService.DeleteEmployeeForCompany(company.Id, incorrectEmployeeId, trackChanges: false));
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () => 
+            await _companyService.EmployeeService.DeleteEmployeeForCompany(company.Id, incorrectEmployeeId, trackChanges: false));
     }
 
     [Test]
@@ -287,10 +286,12 @@ public partial class ServiceManagerTests
         await _context.Employees.AddAsync(testEmployee);
         await _context.SaveChangesAsync();
 
-        _companyService.EmployeeService.DeleteEmployeeForCompany(
+        await _companyService.EmployeeService.DeleteEmployeeForCompany(
             existentCompany.Id, expectedEmployeeId, trackChanges: true);
+
+        var result = await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id);
         
-        Assert.That(await _context.Employees.AnyAsync(e => e.Id == testEmployee.Id), Is.False);
+        Assert.That(result, Is.False);
     }
     
     #endregion
@@ -309,8 +310,8 @@ public partial class ServiceManagerTests
             Position = "UpdatedPosition"
         };
         
-        Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.UpdateEmployeeForCompany(
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
+            await _companyService.EmployeeService.UpdateEmployeeForCompany(
                 incorrectCompanyId, testEmployee.Id, updateDto, compTrackChanges: false, empTrackChanges: false));
     }
     
@@ -326,8 +327,8 @@ public partial class ServiceManagerTests
             Position = "UpdatedPosition"
         };
         
-        Assert.Throws<EmployeeNotFoundException>(() =>
-            _companyService.EmployeeService.UpdateEmployeeForCompany(
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
+            await _companyService.EmployeeService.UpdateEmployeeForCompany(
                 testCompany.Id, incorrectEmployeeId, updateDto, compTrackChanges: false, empTrackChanges: false));
     }
 
@@ -343,7 +344,7 @@ public partial class ServiceManagerTests
         };
         expected.Name = updateDto.Name;
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -362,7 +363,7 @@ public partial class ServiceManagerTests
         };
         expected.Age = updateDto.Age;
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -381,7 +382,7 @@ public partial class ServiceManagerTests
         };
         expected.Age = updateDto.Age;
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -399,7 +400,7 @@ public partial class ServiceManagerTests
             Position = null
         };
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -417,7 +418,7 @@ public partial class ServiceManagerTests
             Position = string.Empty
         };
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -435,7 +436,7 @@ public partial class ServiceManagerTests
             Position = " "
         };
 
-        _companyService.EmployeeService.UpdateEmployeeForCompany(
+        await _companyService.EmployeeService.UpdateEmployeeForCompany(
             expected.CompanyId, expected.Id, updateDto, compTrackChanges: false, empTrackChanges: true);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -452,8 +453,8 @@ public partial class ServiceManagerTests
         var testEmployee = await _context.Employees.FirstAsync();
         var incorrectCompanyId = Guid.NewGuid();
         
-        Assert.Throws<CompanyNotFoundException>(() =>
-            _companyService.EmployeeService.GetEmployeeForPatch(
+        Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
+            await _companyService.EmployeeService.GetEmployeeForPatch(
                 incorrectCompanyId, testEmployee.Id, trackCompanyChanges: false, trackEmployeeChanges: false));
     }
     
@@ -463,8 +464,8 @@ public partial class ServiceManagerTests
         var testCompany = await _context.Companies.FirstAsync();
         var incorrectEmployeeId = Guid.NewGuid();
         
-        Assert.Throws<EmployeeNotFoundException>(() =>
-            _companyService.EmployeeService.GetEmployeeForPatch(
+        Assert.ThrowsAsync<EmployeeNotFoundException>(async () =>
+            await _companyService.EmployeeService.GetEmployeeForPatch(
                 testCompany.Id, incorrectEmployeeId, trackCompanyChanges: false, trackEmployeeChanges: false));
     }
 
@@ -474,7 +475,7 @@ public partial class ServiceManagerTests
         var testEmployee = await _context.Employees.FirstAsync();
         var expected = testEmployee.MapToEmployeeForUpdateDto();
 
-        _companyService.EmployeeService.GetEmployeeForPatch(
+        await _companyService.EmployeeService.GetEmployeeForPatch(
             testEmployee.CompanyId, testEmployee.Id, trackCompanyChanges: false, trackEmployeeChanges: false);
         var entityFromDb = await _context.Employees.FirstAsync(e => e.Id.Equals(testEmployee.Id));
         var result = entityFromDb.MapToEmployeeForUpdateDto();
@@ -487,7 +488,7 @@ public partial class ServiceManagerTests
     {
         var expected = await _context.Employees.FirstAsync();
 
-        _companyService.EmployeeService.GetEmployeeForPatch(
+        await _companyService.EmployeeService.GetEmployeeForPatch(
             expected.CompanyId, expected.Id, trackCompanyChanges: false, trackEmployeeChanges: false);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
@@ -513,7 +514,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -534,7 +535,7 @@ public partial class ServiceManagerTests
         expected.Age = 0;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -555,7 +556,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -576,7 +577,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -597,7 +598,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -618,7 +619,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -639,7 +640,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -660,7 +661,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = testPatchDto.Position;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
@@ -681,7 +682,7 @@ public partial class ServiceManagerTests
         expected.Age = testPatchDto.Age;
         expected.Position = string.Empty;
 
-        _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
+        await _companyService.EmployeeService.SaveChangesForPatch(testPatchDto, expected);
         var result = await _context.Employees.FirstAsync(e => e.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
