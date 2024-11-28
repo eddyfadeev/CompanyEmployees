@@ -483,8 +483,8 @@ public partial class ServiceManagerTests
         var testUpdateDto = new CompanyForUpdateDto(
             Name: string.Empty, Address: string.Empty, Country: string.Empty, Employees: 
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"),
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" },
+                new EmployeeForCreationDto{ Name = "Test2", Age = 2, Position = "Test2" }
             ]);
 
         expected.Employees = testUpdateDto!.Employees.Select(e => e.MapToEntity()).ToList();

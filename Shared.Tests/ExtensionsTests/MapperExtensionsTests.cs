@@ -298,8 +298,8 @@ public class MapperExtensionsTests
             "UpdatedCountry",
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -331,8 +331,8 @@ public class MapperExtensionsTests
             "UpdatedCountry",
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -363,8 +363,8 @@ public class MapperExtensionsTests
             "UpdatedCountry",
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -395,8 +395,8 @@ public class MapperExtensionsTests
             Country: null,
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -455,8 +455,8 @@ public class MapperExtensionsTests
             "UpdatedCountry",
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -487,8 +487,8 @@ public class MapperExtensionsTests
             "UpdatedCountry",
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         
@@ -519,8 +519,8 @@ public class MapperExtensionsTests
             Country: string.Empty,
             Employees:
             [
-                new EmployeeForCreationDto(Name: "Test1", Age: 1, Position: "Test1"), 
-                new EmployeeForCreationDto(Name: "Test2", Age: 2, Position: "Test2")
+                new EmployeeForCreationDto{ Name = "Test1", Age = 1, Position = "Test1" }, 
+                new EmployeeForCreationDto { Name = "Test2", Age = 2, Position = "Test2" }
             ]
         );
         

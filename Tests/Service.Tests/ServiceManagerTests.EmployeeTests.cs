@@ -97,11 +97,11 @@ public partial class ServiceManagerTests
     {
         var testCompany = await _context.Companies.FirstAsync();
         var testEmployee = new EmployeeForCreationDto
-        (
-            Name: string.Empty,
-            Age: default,
-            Position: string.Empty
-        );
+        {
+            Name = string.Empty,
+            Age = default,
+            Position = string.Empty
+        };
         
         var result =
             _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
@@ -112,7 +112,7 @@ public partial class ServiceManagerTests
     #endregion
 
     #region Create Employee For Company Tests
-    
+
     [Test]
     public async Task CreateEmployeeForCompany_ReturnsDtoWithCorrectId_WhenCreated()
     {
@@ -126,15 +126,15 @@ public partial class ServiceManagerTests
         };
         await _context.Companies.AddAsync(testCompany);
         await _context.SaveChangesAsync();
-        
+
         var testEmployee = new EmployeeForCreationDto
-        (
-            Name: string.Empty,
-            Age: default,
-            Position: string.Empty
-        );
-        
-        var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
+        {
+            Name = string.Empty,
+            Age = default,
+            Position = string.Empty
+        };
+
+    var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
 
         var expected = await _context.Employees.FirstAsync(e => e.CompanyId.Equals(testCompany.Id));
         
@@ -155,13 +155,13 @@ public partial class ServiceManagerTests
         };
         await _context.Companies.AddAsync(testCompany);
         await _context.SaveChangesAsync();
-        
+
         var testEmployee = new EmployeeForCreationDto
-        (
-            Name: expectedName,
-            Age: default,
-            Position: string.Empty
-        );
+        {
+            Name = expectedName,
+            Age = default,
+            Position = string.Empty
+        };
         
         var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
@@ -182,13 +182,13 @@ public partial class ServiceManagerTests
         };
         await _context.Companies.AddAsync(testCompany);
         await _context.SaveChangesAsync();
-        
+
         var testEmployee = new EmployeeForCreationDto
-        (
-            Name: string.Empty,
-            Age: expectedAge,
-            Position: string.Empty
-        );
+        {
+            Name = string.Empty,
+            Age = expectedAge,
+            Position = string.Empty
+        };
         
         var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
@@ -209,13 +209,13 @@ public partial class ServiceManagerTests
         };
         await _context.Companies.AddAsync(testCompany);
         await _context.SaveChangesAsync();
-        
+
         var testEmployee = new EmployeeForCreationDto
-        (
-            Name: string.Empty,
-            Age: default,
-            Position: expectedPosition
-        );
+        {
+            Name = string.Empty,
+            Age = default,
+            Position = expectedPosition
+        };
         
         var result = _companyService.EmployeeService.CreateEmployeeForCompany(testCompany.Id, testEmployee, trackChanges: false);
         
@@ -226,7 +226,12 @@ public partial class ServiceManagerTests
     public async Task CreateEmployeeForCompany_ThrowsCompanyNotFound_WhenIncorrectCompanyId()
     {
         var incorrectCompanyId = Guid.NewGuid();
-        var testEmployee = new EmployeeForCreationDto("TestName", Age: 18, "TestPosition");
+        var testEmployee = new EmployeeForCreationDto
+        {
+            Name = "TestName", 
+            Age = 18, 
+            Position = "TestPosition"
+        };
 
         Assert.Throws<CompanyNotFoundException>(() =>
             _companyService.EmployeeService.CreateEmployeeForCompany(incorrectCompanyId, testEmployee, trackChanges: false));
