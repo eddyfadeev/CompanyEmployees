@@ -48,10 +48,10 @@ public class EmployeesController : ControllerBase
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, employeeId = employeeToReturn.Id }, employeeToReturn); 
     }
     
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
+    [HttpDelete("{employeeId:guid}")]
+    public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid employeeId)
     {
-        await _service.EmployeeService.DeleteEmployeeForCompany(companyId, id, trackChanges: false); 
+        await _service.EmployeeService.DeleteEmployeeForCompany(companyId, employeeId, trackChanges: false); 
         
         return NoContent(); 
     }
@@ -99,5 +99,4 @@ public class EmployeesController : ControllerBase
 
         return NoContent();
     }
-    
 }
