@@ -11,19 +11,18 @@ namespace CompanyEmployees.Presentation.Tests.Controllers;
 
 public class EmployeesControllerTests
 {
-    private Mock<IServiceManager> _mockServiceManager;
     private Mock<IEmployeeService> _mockEmployeeService;
     private EmployeesController _controller;
 
     [SetUp]
     public void Setup()
     {
-        _mockServiceManager = new Mock<IServiceManager>();
+        var mockServiceManager = new Mock<IServiceManager>();
         _mockEmployeeService = new Mock<IEmployeeService>();
 
-        _mockServiceManager.Setup(sm => sm.EmployeeService).Returns(_mockEmployeeService.Object);
+        mockServiceManager.Setup(sm => sm.EmployeeService).Returns(_mockEmployeeService.Object);
 
-        _controller = new EmployeesController(_mockServiceManager.Object);
+        _controller = new EmployeesController(mockServiceManager.Object);
     }
     
     #region Get Employees For Company Tests
@@ -145,7 +144,7 @@ public class EmployeesControllerTests
         _mockEmployeeService
             .Setup(s => s.CreateEmployeeForCompany(It.IsAny<Guid>(), It.IsAny<EmployeeForCreationDto>(),
                 It.IsAny<bool>()))
-            .ReturnsAsync(new EmployeeDto()
+            .ReturnsAsync(new EmployeeDto
             {
                 Age = employee.Age,
                 Name = employee.Name,

@@ -8,19 +8,18 @@ namespace CompanyEmployees.Presentation.Tests.Controllers;
 
 public class CompaniesControllerTests
 {
-    private Mock<IServiceManager> _mockServiceManager;
     private Mock<ICompanyService> _mockCompanyService;
     private CompaniesController _controller;
 
     [SetUp]
     public void Setup()
     {
-        _mockServiceManager = new Mock<IServiceManager>();
+        var mockServiceManager = new Mock<IServiceManager>();
         _mockCompanyService = new Mock<ICompanyService>();
 
-        _mockServiceManager.Setup(sm => sm.CompanyService).Returns(_mockCompanyService.Object);
+        mockServiceManager.Setup(sm => sm.CompanyService).Returns(_mockCompanyService.Object);
 
-        _controller = new CompaniesController(_mockServiceManager.Object);
+        _controller = new CompaniesController(mockServiceManager.Object);
     }
 
     #region Get Companies Tests
@@ -214,7 +213,7 @@ public class CompaniesControllerTests
             Country = "TestCountry"
         };
 
-        var expected = new CompanyDto()
+        var expected = new CompanyDto
         {
             Id = Guid.Empty,
             Name = companyForCreationDto.Name,
