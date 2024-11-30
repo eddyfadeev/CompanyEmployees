@@ -169,7 +169,7 @@ public class EmployeesControllerTests
         _mockEmployeeService
             .Setup(s => s.CreateEmployeeForCompany(It.IsAny<Guid>(), It.IsAny<EmployeeForCreationDto>(),
                 It.IsAny<bool>()))
-            .ReturnsAsync(new EmployeeDto()
+            .ReturnsAsync(new EmployeeDto
             {
                 Age = employee.Age,
                 Name = employee.Name,
