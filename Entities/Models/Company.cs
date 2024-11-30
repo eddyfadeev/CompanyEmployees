@@ -36,10 +36,7 @@ public sealed class Company : IEquatable<Company>
         return Id == other.Id &&
                Name == other.Name &&
                Address == other.Address &&
-               Country == other.Country &&
-               (Employees == null && other.Employees == null || 
-                Employees != null && other.Employees != null &&
-                Employees.OrderBy(e => e.Id).SequenceEqual(other.Employees.OrderBy(e => e.Id)));
+               Country == other.Country;
     }
     
     public override bool Equals(object? obj) =>
