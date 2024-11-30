@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\CompanyEmployees.Presentation\CompanyEmployees.Presentation.csproj" />
-      <ProjectReference Include="..\..\Service.Contracts\Service.Contracts.csproj" />
+      <ProjectReference Include="..\DataProvider\DataProvider.csproj" />
+      <ProjectReference Include="..\Repository\Repository.csproj" />
     </ItemGroup>
 
 </Project>

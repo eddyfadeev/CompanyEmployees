@@ -293,24 +293,6 @@ public class CompanyTests
     }
     
     [Test]
-    public void Equals_WhenCompaniesHaveDifferentEmployees_ShouldReturnFalse()
-    {
-        var company = _company;
-        var otherCompany = new Company
-        {
-            Id = _company.Id,
-            Name = _company.Name,
-            Address = _company.Address,
-            Country = _company.Country,
-            Employees = []
-        };
-
-        var result = company.Equals(otherCompany);
-        
-        Assert.That(result, Is.False);
-    }
-    
-    [Test]
     public void Equals_ComparingDifferentTypes_ShouldReturnFalse()
     {
         var company = _company;

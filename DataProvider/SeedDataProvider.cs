@@ -1,8 +1,8 @@
 ﻿using Entities.Models;
 
-namespace Service.Tests;
+namespace DataProvider;
 
-internal class SeedDataProvider
+public class SeedDataProvider
 {
     public SeedDataProvider()
     {

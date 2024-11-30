@@ -35,9 +35,7 @@ public sealed class Employee : IEquatable<Employee>
                Name == other.Name && 
                Age == other.Age && 
                Position == other.Position && 
-               CompanyId == other.CompanyId &&
-               (Company == null && other.Company == null || 
-                Company != null && Company.Equals(other.Company));
+               CompanyId == other.CompanyId;
     }
     
     public override bool Equals(object? obj) =>
