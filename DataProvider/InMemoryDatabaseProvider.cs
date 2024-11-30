@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
 
-namespace Service.Tests;
+namespace DataProvider;
 
-internal static class InMemoryDatabaseProvider
+public static class InMemoryDatabaseProvider
 {
     public static async Task<RepositoryContext> CreateDatabaseContext(IEnumerable<Company> companies, IEnumerable<Employee> employees)
     { 
