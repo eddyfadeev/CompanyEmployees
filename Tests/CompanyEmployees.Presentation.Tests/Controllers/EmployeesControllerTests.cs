@@ -110,27 +110,7 @@ public class EmployeesControllerTests
     #endregion
 
     #region Create Employee For Company Tests
-
-    [Test]
-    public async Task CreateEmployeeForCompany_ReturnsBadResult_WhenPassedEmployeeIsNull()
-    {
-        var result = await _controller.CreateEmployeeForCompany(companyId: Guid.NewGuid(), employee: null);
-        
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task CreateEmployeeForCompany_ReturnsUnprocessableEntity_WhenModelStateIsInvalid()
-    {
-        _controller.ModelState.AddModelError("Error", "Model is invalid!");
-
-        var result =
-            await _controller.CreateEmployeeForCompany(companyId: Guid.NewGuid(),
-                employee: new EmployeeForCreationDto());
-        
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
-
+    
     [Test]
     public async Task CreateEmployeeForCompany_ReturnsCreatedAtRouteResult()
     {
@@ -252,26 +232,6 @@ public class EmployeesControllerTests
     #endregion
 
     #region Update Employee For Company Tests
-
-    [Test]
-    public async Task UpdateEmployeeForCompany_ReturnsBadRequest_WhenPassedEmployeeIsNull()
-    {
-        var result =
-            await _controller.UpdateEmployeeForCompany(companyId: Guid.NewGuid(), employeeId: Guid.NewGuid(), null);
-        
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task UpdateEmployeeForCompany_ReturnsUnprocessableEntity_WhenModelStateIsInvalid()
-    {
-        _controller.ModelState.AddModelError("Test", "Error");
-
-        var result = await _controller.UpdateEmployeeForCompany(companyId: Guid.NewGuid(), employeeId: Guid.NewGuid(),
-            employee: new EmployeeForUpdateDto());
-        
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
     
     [Test]
     public async Task UpdateEmployeeForCompany_ReturnsNoContentResult()

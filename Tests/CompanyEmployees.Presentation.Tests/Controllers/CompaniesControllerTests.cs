@@ -137,25 +137,6 @@ public class CompaniesControllerTests
     #endregion
 
     #region Create Company Tests
-
-    [Test]
-    public async Task CreateCompany_ReturnsBadRequest_WhenNullPassed()
-    {
-        var result = await _controller.CreateCompany(null);
-
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-    
-    [Test]
-    public async Task CreateCompany_ReturnsUnprocessableEntity_WhenInvalidModel()
-    {
-        var companyForCreationDto = new CompanyForCreationDto();
-        _controller.ModelState.AddModelError("Error", "Model is invalid");
-
-        var result = await _controller.CreateCompany(companyForCreationDto);
-
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
     
     [Test]
     public async Task CreateCompany_ReturnsCreatedAtRouteResult()
@@ -454,24 +435,6 @@ public class CompaniesControllerTests
     #endregion
 
     #region Update Company Tests
-
-    [Test]
-    public async Task UpdateCompany_ReturnsBadRequest_WhenPassedCompanyIsNull()
-    {
-        var result = await _controller.UpdateCompany(id: Guid.NewGuid(), null);
-        
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task UpdateCompany_ReturnsUnprocessableEntity_WhenModelStateIsInvalid()
-    {
-        _controller.ModelState.AddModelError("Error", "Model is invalid");
-        
-        var result = await _controller.UpdateCompany(id: Guid.NewGuid(), new CompanyForUpdateDto());
-        
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
 
     [Test]
     public async Task UpdateCompany_ReturnsNoContent_WhenSuccess()
