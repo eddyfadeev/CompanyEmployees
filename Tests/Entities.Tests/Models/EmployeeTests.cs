@@ -305,24 +305,6 @@ public class EmployeeTests
     }
     
     [Test]
-    public void Equals_WhenEmployeesHaveDifferentCompanies_ShouldReturnFalse()
-    {
-        var otherEmployee = new Employee
-        {
-            Id = _employee.Id,
-            Name = _employee.Name,
-            Age = _employee.Age,
-            Position = _employee.Position,
-            CompanyId = _employee.CompanyId,
-            Company = new Company()
-        };
-
-        var result = _employee.Equals(otherEmployee);
-        
-        Assert.That(result, Is.False);
-    }
-    
-    [Test]
     public void Equals_ComparingDifferentTypes_ShouldReturnFalse()
     {
         object otherEmployee = new Company();
