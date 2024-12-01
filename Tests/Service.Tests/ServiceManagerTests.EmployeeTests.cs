@@ -23,7 +23,7 @@ public partial class ServiceManagerTests
 
         var result = await _companyService.EmployeeService.GetEmployees(company.Id, parameters, trackChanges: false);
         
-        Assert.That(result, Is.EquivalentTo(expected));
+        Assert.That(result.employees, Is.EquivalentTo(expected));
     }
 
     [Test]
@@ -47,7 +47,7 @@ public partial class ServiceManagerTests
 
         var result = await _companyService.EmployeeService.GetEmployees(companyToCreate.Id, parameters, trackChanges: false);
         
-        Assert.That(result, Is.EquivalentTo(expected));
+        Assert.That(result.employees, Is.EquivalentTo(expected));
     }
 
     [Test]
