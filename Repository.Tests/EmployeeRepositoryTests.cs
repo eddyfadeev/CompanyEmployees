@@ -1,6 +1,7 @@
 ﻿using DataProvider;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Repository.Tests;
 
@@ -30,9 +31,10 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task GetEmployees_ReturnsOrderedEmployees()
     {
+        var parameters = new EmployeeParameters();
         var testCompany = await _context.Companies.FirstAsync();
         
-        var result = await _repository.GetEmployees(testCompany.Id, trackChanges: false);
+        var result = await _repository.GetEmployees(testCompany.Id, parameters, trackChanges: false);
         
         Assert.That(result, Is.Ordered.By(nameof(Company.Name)));
     }
@@ -40,12 +42,13 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task GetEmployees_ReturnsCorrectEmployees()
     {
+        var parameters = new EmployeeParameters();
         var testCompany = await _context.Companies.FirstAsync();
         var expected = await _context.Employees.Where(e => 
                 e.CompanyId.Equals(testCompany.Id))
             .ToListAsync();
         
-        var result = await _repository.GetEmployees(testCompany.Id, trackChanges: false);
+        var result = await _repository.GetEmployees(testCompany.Id, parameters, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -53,9 +56,10 @@ public class EmployeeRepositoryTests
     [Test]
     public async Task GetEmployees_ReturnsEmptyEmployeesList_WhenNoCompanyInDb()
     {
+        var parameters = new EmployeeParameters();
         var testCompanyId = Guid.NewGuid();
         
-        var result = await _repository.GetEmployees(testCompanyId, trackChanges: false);
+        var result = await _repository.GetEmployees(testCompanyId, parameters, trackChanges: false);
         
         Assert.That(result, Is.Empty);
     }
