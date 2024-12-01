@@ -54,6 +54,17 @@ public class EmployeeRepositoryTests
     }
     
     [Test]
+    public async Task GetEmployees_ReturnsCorrectEmployeesAmount()
+    {
+        var expected = new EmployeeParameters { PageSize = 2 };
+        var testCompany = await _context.Companies.FirstAsync();
+        
+        var result = await _repository.GetEmployees(testCompany.Id, employeeParameters: expected, trackChanges: false);
+        
+        Assert.That(result.Count(), Is.EqualTo(expected.PageSize));
+    }
+    
+    [Test]
     public async Task GetEmployees_ReturnsEmptyEmployeesList_WhenNoCompanyInDb()
     {
         var parameters = new EmployeeParameters();
