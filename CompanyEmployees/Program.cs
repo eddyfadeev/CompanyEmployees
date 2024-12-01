@@ -34,7 +34,7 @@ builder.Services.AddControllers(config =>
         config.InputFormatters.Insert(0, getJsonPatchInputFormatter());
     })
     .AddXmlDataContractSerializerFormatters()
-    .AddCustomCSVFormatter()
+    .AddCustomCsvFormatter()
     .AddApplicationPart(typeof(AssemblyReference).Assembly);
 
 var app = builder.Build();
