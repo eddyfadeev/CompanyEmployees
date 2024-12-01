@@ -4,6 +4,7 @@ using Entities.Models;
 using Service.Contracts;
 using Shared.DTO;
 using Shared.Extensions;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -16,11 +17,11 @@ internal sealed class EmployeeService : IEmployeeService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> GetEmployees(Guid companyId, bool trackChanges)
+    public async Task<IEnumerable<EmployeeDto>> GetEmployees(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         await CheckIfCompanyExists(companyId);
 
-        var employees = await _repository.Employee.GetEmployees(companyId, trackChanges);
+        var employees = await _repository.Employee.GetEmployees(companyId, employeeParameters, trackChanges);
         
         return employees.Select(e => e.MapToEmployeeDto());
     }
