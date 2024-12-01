@@ -160,4 +160,24 @@ public class EmployeeRepositoryTests
         
         Assert.That(result, Is.False);
     }
+    
+    [Test]
+    public async Task EmployeeExists_ReturnsTrue_WhenExistsInDb()
+    {
+        var testEmployee = await _context.Employees.FirstAsync();
+
+        var result = await _repository.EmployeeExists(testEmployee.Id);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public async Task EmployeeExists_ReturnsFalse_WhenDoesNotExistsInDb()
+    {
+        var wrongId = Guid.NewGuid();
+
+        var result = await _repository.EmployeeExists(wrongId);
+        
+        Assert.That(result, Is.False);
+    }
 }
