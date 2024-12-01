@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Moq;
 using Service.Contracts;
 using Shared.DTO;
+using Shared.RequestFeatures;
 
 namespace CompanyEmployees.Presentation.Tests.Controllers;
 
@@ -37,10 +38,10 @@ public class EmployeesControllerTests
         };
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
             .ReturnsAsync(employees);
 
-        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid());
+        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -55,10 +56,10 @@ public class EmployeesControllerTests
         };
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
             .ReturnsAsync(expected);
 
-        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid());
+        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
         Assert.That((result as OkObjectResult)?.Value, Is.EquivalentTo(expected));
     }
