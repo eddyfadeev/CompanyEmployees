@@ -3,6 +3,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTO;
 using Shared.Extensions;
+using Shared.RequestFeatures;
 
 namespace Service.Tests;
 
@@ -13,13 +14,14 @@ public partial class ServiceManagerTests
     [Test]
     public async Task GetEmployees_ReturnsEmployeesList_WhenCorrectCompanyId()
     {
+        var parameters = new EmployeeParameters();
         var company = await _context.Companies.FirstAsync();
         var expected = await _context.Employees.Where(e => 
             e.CompanyId.Equals(company.Id))
             .Select(e => e.MapToEmployeeDto())
             .ToListAsync();
 
-        var result = await _companyService.EmployeeService.GetEmployees(company.Id, trackChanges: false);
+        var result = await _companyService.EmployeeService.GetEmployees(company.Id, parameters, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -27,6 +29,7 @@ public partial class ServiceManagerTests
     [Test]
     public async Task GetEmployees_ReturnsEmptyList_WhenNoEmployees()
     {
+        var parameters = new EmployeeParameters();
         var testId = Guid.NewGuid();
         var companyToCreate = new Company
         {
@@ -42,7 +45,7 @@ public partial class ServiceManagerTests
             .Select(e => e.MapToEmployeeDto())
             .ToListAsync();
 
-        var result = await _companyService.EmployeeService.GetEmployees(companyToCreate.Id, trackChanges: false);
+        var result = await _companyService.EmployeeService.GetEmployees(companyToCreate.Id, parameters, trackChanges: false);
         
         Assert.That(result, Is.EquivalentTo(expected));
     }
@@ -50,10 +53,11 @@ public partial class ServiceManagerTests
     [Test]
     public async Task GetEmployees_ThrowsCompanyNotFoundException_WhenIncorrectCompanyId()
     {
+        var parameters = new EmployeeParameters();
         var incorrectCompanyId = Guid.NewGuid();
 
         Assert.ThrowsAsync<CompanyNotFoundException>(async () =>
-            await _companyService.EmployeeService.GetEmployees(incorrectCompanyId, trackChanges: false));
+            await _companyService.EmployeeService.GetEmployees(incorrectCompanyId, parameters, trackChanges: false));
     }
 
     #endregion
