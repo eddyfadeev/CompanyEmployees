@@ -276,7 +276,7 @@ public class EmployeesControllerTests
         var mockValidator = new Mock<IObjectModelValidator>();
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
             .ReturnsAsync((employeeToPatch, employee));
 
         _controller.ObjectValidator = mockValidator.Object;
@@ -309,7 +309,7 @@ public class EmployeesControllerTests
         };
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
             .ReturnsAsync((employeeToPatch, employee));
 
         var mockValidator = new Mock<IObjectModelValidator>();
