@@ -28,4 +28,7 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
 
     public void DeleteEmployeeForCompany(Employee employee) => 
         Delete(employee);
+
+    public async Task<bool> EmployeeExists(Guid employeeId) =>
+        await RepositoryContext.Employees.AnyAsync(e => e.Id.Equals(employeeId));
 }
