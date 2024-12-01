@@ -52,7 +52,7 @@ public class EmployeesController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid employeeId, [FromBody] EmployeeForUpdateDto? employee)
     {
-        await _service.EmployeeService.UpdateEmployeeForCompany(companyId, employeeId, employee, compTrackChanges: false, empTrackChanges: true);
+        await _service.EmployeeService.UpdateEmployeeForCompany(companyId, employeeId, employee, trackChanges: true);
         
         return NoContent(); 
     }
@@ -67,7 +67,7 @@ public class EmployeesController : ControllerBase
         }
 
         var result = await _service.EmployeeService.GetEmployeeForPatch(companyId, employeeId,
-            trackCompanyChanges: false, trackEmployeeChanges: true);
+            trackChanges: true);
         
         patchDoc.ApplyTo(result.employeeToPatch, ModelState);
 
