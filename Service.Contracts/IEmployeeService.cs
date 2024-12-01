@@ -1,11 +1,12 @@
 ﻿using Entities.Models;
 using Shared.DTO;
+using Shared.RequestFeatures;
 
 namespace Service.Contracts;
 
 public interface IEmployeeService
 {
-    Task<IEnumerable<EmployeeDto>> GetEmployees(Guid companyId, bool trackChanges);
+    Task<IEnumerable<EmployeeDto>> GetEmployees(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
     Task<EmployeeDto> GetEmployee(Guid companyId, Guid employeeId, bool trackChanges);
     Task<EmployeeDto> CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employee, bool trackChanges);
     Task DeleteEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges);
