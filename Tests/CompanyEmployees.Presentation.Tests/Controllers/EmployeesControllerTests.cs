@@ -1,5 +1,6 @@
 ﻿using CompanyEmployees.Presentation.Controllers;
 using Entities.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -23,7 +24,19 @@ public class EmployeesControllerTests
 
         mockServiceManager.Setup(sm => sm.EmployeeService).Returns(_mockEmployeeService.Object);
 
+        var mockHttpContext = new Mock<HttpContext>();
+        var mockResponse = new Mock<HttpResponse>();
+        
+        var headerDictionary = new HeaderDictionary();
+        mockResponse.SetupGet(r => r.Headers).Returns(headerDictionary);
+
+        mockHttpContext.SetupGet(x => x.Response).Returns(mockResponse.Object);
+
         _controller = new EmployeesController(mockServiceManager.Object);
+        _controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = mockHttpContext.Object
+        };
     }
     
     #region Get Employees For Company Tests
@@ -31,15 +44,18 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult()
     {
-        var employees = new List<EmployeeDto>
-        {
-            new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-            new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
-        };
+        var pagedList = PagedList<EmployeeDto>.ToPagedList(
+                source: 
+                [
+                    new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
+                    new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
+                ],
+                pageNumber: 1,
+                pageSize: 10);
 
         _mockEmployeeService
             .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
-            .ReturnsAsync(employees);
+            .ReturnsAsync((pagedList, pagedList.MetaData));
 
         var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
@@ -49,15 +65,18 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult_WithListOfEmployeeDtos()
     {
-        var expected = new List<EmployeeDto>
-        {
-            new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-            new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
-        };
+        var expected = PagedList<EmployeeDto>.ToPagedList(
+            source: 
+            [
+                new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
+                new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
+            ],
+            pageNumber: 1,
+            pageSize: 10);
 
         _mockEmployeeService
             .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
-            .ReturnsAsync(expected);
+            .ReturnsAsync((expected, expected.MetaData));
 
         var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
