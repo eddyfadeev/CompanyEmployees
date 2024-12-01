@@ -16,7 +16,8 @@ public static class ServiceExtensions
             options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("X-Pagination"));
         });
     
     public static void ConfigureIISIntegration(this IServiceCollection services) =>
@@ -35,7 +36,7 @@ public static class ServiceExtensions
         services.AddDbContext<RepositoryContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-    public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+    public static IMvcBuilder AddCustomCsvFormatter(this IMvcBuilder builder) =>
         builder.AddMvcOptions(config =>
             config.OutputFormatters.Add(new CsvOutputFormatter()));
 }
