@@ -2,16 +2,24 @@
 
 public abstract class RequestParameters
 {
-    private const int MinPageNumber = 1;
-    
-    private const int MinPageSize = 1;
-    private const int MaxPageSize = 50;
-
     private int _pageNumber = 1;
     public int PageNumber
     {
         get => _pageNumber;
-        set => _pageNumber = value < MinPageNumber ? MinPageNumber : value;
+        set
+        {
+            const int minPageNumber = 1;
+
+            switch (value)
+            {
+                case < minPageNumber:
+                    _pageNumber = minPageNumber;
+                    return;
+                default:
+                    _pageNumber = value;
+                    break;
+            }
+        }
     }
 
     private int _pageSize = 10;
@@ -19,14 +27,17 @@ public abstract class RequestParameters
     {
         get => _pageSize;
         set
-        {
+        { 
+            const int minPageSize = 1;
+            const int maxPageSize = 50;
+            
             switch (value)
             {
-                case < MinPageSize:
-                    _pageSize = MinPageSize;
+                case < minPageSize:
+                    _pageSize = minPageSize;
                     return;
-                case > MaxPageSize:
-                    _pageSize = MaxPageSize;
+                case > maxPageSize:
+                    _pageSize = maxPageSize;
                     return;
                 default:
                     _pageSize = value;
@@ -36,7 +47,7 @@ public abstract class RequestParameters
     }
 
     private string _orderBy = "name";
-    public string? OrderBy
+    public string OrderBy
     {
         get => _orderBy;
         set
@@ -47,6 +58,21 @@ public abstract class RequestParameters
             }
             
             _orderBy = value;
+        }
+    }
+
+    private string _fields = string.Empty;
+    public string Fields
+    {
+        get => _fields;
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
+
+            _fields = value;
         }
     }
 }
