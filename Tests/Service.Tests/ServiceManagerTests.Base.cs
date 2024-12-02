@@ -1,5 +1,7 @@
 ﻿using DataProvider;
 using Repository;
+using Service.DataShaping;
+using Shared.DTO;
 
 namespace Service.Tests;
 
@@ -18,7 +20,8 @@ public partial class ServiceManagerTests
         );
 
         var repoManger = new RepositoryManager(_context);
-        _companyService = new ServiceManager(repoManger);
+        var dataShaper = new DataShaper<EmployeeDto>();
+        _companyService = new ServiceManager(repoManger, dataShaper);
     }
 
     [TearDown]
