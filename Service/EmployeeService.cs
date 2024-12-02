@@ -1,4 +1,6 @@
-﻿using Contracts.Repository;
+﻿using System.Dynamic;
+using Contracts;
+using Contracts.Repository;
 using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
@@ -11,13 +13,15 @@ namespace Service;
 internal sealed class EmployeeService : IEmployeeService
 {
     private readonly IRepositoryManager _repository;
+    private readonly IDataShaper<EmployeeDto> _dataShaper;
 
-    public EmployeeService(IRepositoryManager repository)
+    public EmployeeService(IRepositoryManager repository, IDataShaper<EmployeeDto> dataShaper)
     {
         _repository = repository;
+        _dataShaper = dataShaper;
     }
 
-    public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployees(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+    public async Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployees(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         if (!employeeParameters.ValidAgeRange)
         {
@@ -26,8 +30,11 @@ internal sealed class EmployeeService : IEmployeeService
         await CheckIfCompanyExists(companyId);
 
         var employeesWithMetaData = await _repository.Employee.GetEmployees(companyId, employeeParameters, trackChanges);
+        var employeesDto = employeesWithMetaData.Select(e => e.MapToEmployeeDto());
 
-        return (employees: employeesWithMetaData.Select(e => e.MapToEmployeeDto()),
+        var shapedData = _dataShaper.ShapeData(employeesDto, employeeParameters.Fields);
+        
+        return (employees: shapedData,
                 metaData: employeesWithMetaData.MetaData);
     }
 
