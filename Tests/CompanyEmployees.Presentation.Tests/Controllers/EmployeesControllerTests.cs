@@ -1,4 +1,5 @@
-﻿using CompanyEmployees.Presentation.Controllers;
+﻿using System.Dynamic;
+using CompanyEmployees.Presentation.Controllers;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -44,11 +45,11 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult()
     {
-        var pagedList = PagedList<EmployeeDto>.ToPagedList(
+        var pagedList = PagedList<ExpandoObject>.ToPagedList(
                 source: 
                 [
-                    new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-                    new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
+                    CreateExpandoEmployee (Guid.NewGuid(), "Test Name 1"),
+                    CreateExpandoEmployee (Guid.NewGuid(), "Test Name 2")
                 ],
                 pageNumber: 1,
                 pageSize: 10);
@@ -65,11 +66,11 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult_WithListOfEmployeeDtos()
     {
-        var expected = PagedList<EmployeeDto>.ToPagedList(
+        var expected = PagedList<ExpandoObject>.ToPagedList(
             source: 
             [
-                new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-                new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
+                CreateExpandoEmployee(Guid.NewGuid(), "Test Name 1"),
+                CreateExpandoEmployee(Guid.NewGuid(), "Test Name 2")
             ],
             pageNumber: 1,
             pageSize: 10);
@@ -347,4 +348,12 @@ public class EmployeesControllerTests
     }
 
     #endregion
+    
+    private static dynamic CreateExpandoEmployee(Guid id, string name)
+    {
+        dynamic employee = new ExpandoObject();
+        employee.Id = id;
+        employee.Name = name;
+        return employee;
+    }
 }
