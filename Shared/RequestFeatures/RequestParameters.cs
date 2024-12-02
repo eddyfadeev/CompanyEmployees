@@ -34,4 +34,19 @@ public abstract class RequestParameters
             }
         }
     }
+
+    private string _orderBy = "name";
+    public string? OrderBy
+    {
+        get => _orderBy;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+            
+            _orderBy = value;
+        }
+    }
 }
