@@ -1,4 +1,5 @@
-﻿using Entities.Exceptions;
+﻿using System.Dynamic;
+using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTO;
@@ -18,7 +19,7 @@ public partial class ServiceManagerTests
         var company = await _context.Companies.FirstAsync();
         var expected = await _context.Employees.Where(e => 
             e.CompanyId.Equals(company.Id))
-            .Select(e => e.MapToEmployeeDto())
+            .Select(e => CreateExpandoEmployee(e.Id, e.Name, e.Age, e.Position))
             .ToListAsync();
 
         var result = await _companyService.EmployeeService.GetEmployees(company.Id, parameters, trackChanges: false);
@@ -693,4 +694,14 @@ public partial class ServiceManagerTests
     }
     
     #endregion
+    
+    private static dynamic CreateExpandoEmployee(Guid id, string name, int age, string position)
+    {
+        dynamic employee = new ExpandoObject();
+        employee.Id = id;
+        employee.Name = name;
+        employee.Age = age;
+        employee.Position = position;
+        return employee;
+    }
 }
