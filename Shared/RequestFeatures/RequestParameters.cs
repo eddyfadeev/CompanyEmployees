@@ -6,73 +6,27 @@ public abstract class RequestParameters
     public int PageNumber
     {
         get => _pageNumber;
-        set
-        {
-            const int minPageNumber = 1;
-
-            switch (value)
-            {
-                case < minPageNumber:
-                    _pageNumber = minPageNumber;
-                    return;
-                default:
-                    _pageNumber = value;
-                    break;
-            }
-        }
+        set => _pageNumber = Math.Max(1, value);
     }
 
     private int _pageSize = 10;
     public int PageSize
     {
         get => _pageSize;
-        set
-        { 
-            const int minPageSize = 1;
-            const int maxPageSize = 50;
-            
-            switch (value)
-            {
-                case < minPageSize:
-                    _pageSize = minPageSize;
-                    return;
-                case > maxPageSize:
-                    _pageSize = maxPageSize;
-                    return;
-                default:
-                    _pageSize = value;
-                    break;
-            }
-        }
+        set => _pageSize = Math.Clamp(value, 1, 50);
     }
 
     private string _orderBy = "name";
     public string OrderBy
     {
         get => _orderBy;
-        set
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return;
-            }
-            
-            _orderBy = value;
-        }
+        set => _orderBy = !string.IsNullOrWhiteSpace(value) ? value : _orderBy;
     }
 
     private string _fields = string.Empty;
     public string Fields
     {
         get => _fields;
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return;
-            }
-
-            _fields = value;
-        }
+        set => _fields = !string.IsNullOrEmpty(value) ? value : _fields;
     }
 }
