@@ -10,6 +10,7 @@ namespace CompanyEmployees.Presentation.Controllers;
 
 [Route("api/companies/{companyId:guid}/employees")]
 [ApiController]
+[ResponseCache(CacheProfileName = "60SecondsDuration")]
 public class EmployeesController : ControllerBase
 {
     private readonly IServiceManager _service;
