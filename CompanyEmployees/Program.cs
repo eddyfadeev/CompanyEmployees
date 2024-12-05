@@ -23,6 +23,7 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureResponseCaching();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options => 
@@ -35,7 +36,14 @@ builder.Services.AddControllers(config =>
     {
         config.RespectBrowserAcceptHeader = true;
         config.ReturnHttpNotAcceptable = true;
-        config.InputFormatters.Insert(0, getJsonPatchInputFormatter());
+        config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+        config.CacheProfiles.Add(
+            "60SecondsDuration", 
+            new CacheProfile
+            {
+                Duration = 60, 
+                Location = ResponseCacheLocation.Client
+            });
     })
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCsvFormatter()
@@ -58,6 +66,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseCors("CorsPolicy");
+app.UseResponseCaching();
 
 app.UseAuthorization();
 
@@ -66,7 +75,7 @@ app.MapControllers();
 await app.RunAsync();
 return;
 
-NewtonsoftJsonPatchInputFormatter getJsonPatchInputFormatter() =>
+NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
     new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
         .Services.BuildServiceProvider()
         .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
