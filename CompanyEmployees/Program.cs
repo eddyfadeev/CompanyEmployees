@@ -25,6 +25,8 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureResponseCaching();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 
 builder.Services.Configure<ApiBehaviorOptions>(options => 
     options.SuppressModelStateInvalidFilter = true);
@@ -68,6 +70,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseCors("CorsPolicy");
 app.UseResponseCaching();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
