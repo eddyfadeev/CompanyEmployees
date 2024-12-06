@@ -61,7 +61,7 @@ public static class ServiceExtensions
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
     
-    public static void ConfigureJwt(IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
         var secretKey = Environment.GetEnvironmentVariable("SECRET");
