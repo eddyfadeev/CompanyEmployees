@@ -65,6 +65,16 @@ public static EmployeeDto MapToEmployeeDto(this Employee employee) =>
             Position = employee.Position
         };
 
+    public static User MapToEntity(this UserForRegistrationDto user) =>
+        new()
+        {
+            FirstName = user.FirstName ?? string.Empty,
+            LastName = user.LastName ?? string.Empty,
+            UserName = user.UserName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber
+        };
+
     public static Employee UpdateEntity(this Employee employee, EmployeeForUpdateDto updateDto)
     {
         employee.Name = string.IsNullOrWhiteSpace(updateDto.Name) ? employee.Name : updateDto.Name.Trim();
