@@ -27,4 +27,7 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     
     public void DeleteCompany(Company company) => 
         Delete(company);
+
+    public async Task<bool> CompanyExists(Guid companyId) =>
+        await RepositoryContext.Companies.AnyAsync(c => c.Id.Equals(companyId));
 }

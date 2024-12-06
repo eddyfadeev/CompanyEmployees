@@ -1,11 +1,14 @@
-﻿using CompanyEmployees.Presentation.Controllers;
+﻿using System.Dynamic;
+using CompanyEmployees.Presentation.Controllers;
 using Entities.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Moq;
 using Service.Contracts;
 using Shared.DTO;
+using Shared.RequestFeatures;
 
 namespace CompanyEmployees.Presentation.Tests.Controllers;
 
@@ -22,7 +25,19 @@ public class EmployeesControllerTests
 
         mockServiceManager.Setup(sm => sm.EmployeeService).Returns(_mockEmployeeService.Object);
 
+        var mockHttpContext = new Mock<HttpContext>();
+        var mockResponse = new Mock<HttpResponse>();
+        
+        var headerDictionary = new HeaderDictionary();
+        mockResponse.SetupGet(r => r.Headers).Returns(headerDictionary);
+
+        mockHttpContext.SetupGet(x => x.Response).Returns(mockResponse.Object);
+
         _controller = new EmployeesController(mockServiceManager.Object);
+        _controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = mockHttpContext.Object
+        };
     }
     
     #region Get Employees For Company Tests
@@ -30,17 +45,20 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult()
     {
-        var employees = new List<EmployeeDto>
-        {
-            new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-            new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
-        };
+        var pagedList = PagedList<ExpandoObject>.ToPagedList(
+                source: 
+                [
+                    CreateExpandoEmployee (Guid.NewGuid(), "Test Name 1"),
+                    CreateExpandoEmployee (Guid.NewGuid(), "Test Name 2")
+                ],
+                pageNumber: 1,
+                pageSize: 10);
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<bool>()))
-            .ReturnsAsync(employees);
+            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
+            .ReturnsAsync((pagedList, pagedList.MetaData));
 
-        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid());
+        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
@@ -48,17 +66,20 @@ public class EmployeesControllerTests
     [Test]
     public async Task GetEmployeesForCompany_ReturnsOkResult_WithListOfEmployeeDtos()
     {
-        var expected = new List<EmployeeDto>
-        {
-            new () { Id = Guid.NewGuid(), Name = "Test Name 1" },
-            new () { Id = Guid.NewGuid(), Name = "Test Name 2" }
-        };
+        var expected = PagedList<ExpandoObject>.ToPagedList(
+            source: 
+            [
+                CreateExpandoEmployee(Guid.NewGuid(), "Test Name 1"),
+                CreateExpandoEmployee(Guid.NewGuid(), "Test Name 2")
+            ],
+            pageNumber: 1,
+            pageSize: 10);
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<bool>()))
-            .ReturnsAsync(expected);
+            .Setup(s => s.GetEmployees(It.IsAny<Guid>(), It.IsAny<EmployeeParameters>(), It.IsAny<bool>()))
+            .ReturnsAsync((expected, expected.MetaData));
 
-        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid());
+        var result = await _controller.GetEmployeesForCompany(Guid.NewGuid(), new EmployeeParameters());
 
         Assert.That((result as OkObjectResult)?.Value, Is.EquivalentTo(expected));
     }
@@ -110,27 +131,7 @@ public class EmployeesControllerTests
     #endregion
 
     #region Create Employee For Company Tests
-
-    [Test]
-    public async Task CreateEmployeeForCompany_ReturnsBadResult_WhenPassedEmployeeIsNull()
-    {
-        var result = await _controller.CreateEmployeeForCompany(companyId: Guid.NewGuid(), employee: null);
-        
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task CreateEmployeeForCompany_ReturnsUnprocessableEntity_WhenModelStateIsInvalid()
-    {
-        _controller.ModelState.AddModelError("Error", "Model is invalid!");
-
-        var result =
-            await _controller.CreateEmployeeForCompany(companyId: Guid.NewGuid(),
-                employee: new EmployeeForCreationDto());
-        
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
-
+    
     [Test]
     public async Task CreateEmployeeForCompany_ReturnsCreatedAtRouteResult()
     {
@@ -252,26 +253,6 @@ public class EmployeesControllerTests
     #endregion
 
     #region Update Employee For Company Tests
-
-    [Test]
-    public async Task UpdateEmployeeForCompany_ReturnsBadRequest_WhenPassedEmployeeIsNull()
-    {
-        var result =
-            await _controller.UpdateEmployeeForCompany(companyId: Guid.NewGuid(), employeeId: Guid.NewGuid(), null);
-        
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task UpdateEmployeeForCompany_ReturnsUnprocessableEntity_WhenModelStateIsInvalid()
-    {
-        _controller.ModelState.AddModelError("Test", "Error");
-
-        var result = await _controller.UpdateEmployeeForCompany(companyId: Guid.NewGuid(), employeeId: Guid.NewGuid(),
-            employee: new EmployeeForUpdateDto());
-        
-        Assert.That(result, Is.InstanceOf<UnprocessableEntityObjectResult>());
-    }
     
     [Test]
     public async Task UpdateEmployeeForCompany_ReturnsNoContentResult()
@@ -316,7 +297,7 @@ public class EmployeesControllerTests
         var mockValidator = new Mock<IObjectModelValidator>();
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
             .ReturnsAsync((employeeToPatch, employee));
 
         _controller.ObjectValidator = mockValidator.Object;
@@ -349,7 +330,7 @@ public class EmployeesControllerTests
         };
 
         _mockEmployeeService
-            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<bool>()))
+            .Setup(s => s.GetEmployeeForPatch(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>()))
             .ReturnsAsync((employeeToPatch, employee));
 
         var mockValidator = new Mock<IObjectModelValidator>();
@@ -367,4 +348,12 @@ public class EmployeesControllerTests
     }
 
     #endregion
+    
+    private static dynamic CreateExpandoEmployee(Guid id, string name)
+    {
+        dynamic employee = new ExpandoObject();
+        employee.Id = id;
+        employee.Name = name;
+        return employee;
+    }
 }

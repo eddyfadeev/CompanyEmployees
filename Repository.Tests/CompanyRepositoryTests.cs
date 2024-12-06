@@ -131,12 +131,31 @@ public class CompanyRepositoryTests
     {
         var expected = await _context.Companies.FirstAsync();
         expected.Name = "UpdatedName";
-
         _repository.Update(expected);
         await _context.SaveChangesAsync();
 
         var result = await _context.Companies.FirstAsync(c => c.Id.Equals(expected.Id));
         
         Assert.That(result, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task CompanyExists_ReturnsTrue_WhenExistsInDb()
+    {
+        var testCompany = await _context.Companies.FirstAsync();
+
+        var result = await _repository.CompanyExists(testCompany.Id);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public async Task CompanyExists_ReturnsFalse_WhenDoesNotExistsInDb()
+    {
+        var wrongId = Guid.NewGuid();
+
+        var result = await _repository.CompanyExists(wrongId);
+        
+        Assert.That(result, Is.False);
     }
 }
