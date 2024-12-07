@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Contracts.Logging;
 using Contracts.Repository;
+using Entities.ConfigurationModels;
 using Entities.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,7 +64,9 @@ public static class ServiceExtensions
     
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
+        var jwtConfiguration = new JwtConfiguration();
+        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+        
         var secretKey = Environment.GetEnvironmentVariable("SECRET");
 
         services.AddAuthentication(opt =>
@@ -80,8 +83,8 @@ public static class ServiceExtensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 
-                    ValidIssuer = jwtSettings["validIssuer"],
-                    ValidAudience = jwtSettings["validAudience"],
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
