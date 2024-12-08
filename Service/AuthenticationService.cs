@@ -7,7 +7,7 @@ using Entities.ConfigurationModels;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Service.Contracts;
 using Shared.DTO;
@@ -19,19 +19,16 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly ILoggerManager _logger;
     private readonly UserManager<User> _userManager;
-    private readonly IConfiguration _configuration;
     private readonly JwtConfiguration _jwtConfiguration;
 
     private User? _user;
 
     public AuthenticationService(ILoggerManager loggerManager, UserManager<User> userManager,
-        IConfiguration configuration)
+        IOptions<JwtConfiguration> configuration)
     {
         _logger = loggerManager;
         _userManager = userManager;
-        _configuration = configuration;
-        _jwtConfiguration = new JwtConfiguration();
-        _configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
+        _jwtConfiguration = configuration.Value;
     }
     
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
@@ -164,8 +161,7 @@ public class AuthenticationService : IAuthenticationService
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
 
-        var jwtSecurityToken = securityToken as JwtSecurityToken;
-        if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+        if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
         {
             throw new SecurityTokenException("Invalid token.");
