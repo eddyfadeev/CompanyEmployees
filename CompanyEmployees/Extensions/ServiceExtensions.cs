@@ -110,7 +110,7 @@ public static class ServiceExtensions
                 Scheme = bearer
             });
 
-            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
