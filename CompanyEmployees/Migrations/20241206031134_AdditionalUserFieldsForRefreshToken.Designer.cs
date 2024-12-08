@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,11 @@ using Repository;
 namespace CompanyEmployees.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241206031134_AdditionalUserFieldsForRefreshToken")]
+    partial class AdditionalUserFieldsForRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,13 +236,13 @@ namespace CompanyEmployees.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "012985c0-ab54-4019-835f-70a7b2126c96",
+                            Id = "a0307200-fb5f-40e2-b2fd-123a4e1cfeab",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "43a17aad-0e87-48ef-80b6-f6effbc7ef57",
+                            Id = "de6806d6-9f64-4e62-ae3b-5540c9bda8c4",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

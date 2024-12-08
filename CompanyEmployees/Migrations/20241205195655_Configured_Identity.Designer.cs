@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,11 @@ using Repository;
 namespace CompanyEmployees.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241205195655_Configured_Identity")]
+    partial class Configured_Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +98,7 @@ namespace CompanyEmployees.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("19cc77db-ca82-4566-b0e3-ecd99f1cc33d"),
+                            Id = new Guid("c39b33e6-2ea2-471c-9117-0b5fe614e951"),
                             Age = 0,
                             CompanyId = new Guid("12345678-1234-1234-1234-123456789012"),
                             Name = "Indiana Jones",
@@ -103,7 +106,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e5da6688-886c-4adc-a6dd-adac23897117"),
+                            Id = new Guid("19708463-599e-42aa-95e5-3b5c19891316"),
                             Age = 0,
                             CompanyId = new Guid("12345678-1234-1234-1234-123456789012"),
                             Name = "Lara Croft",
@@ -111,7 +114,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("39534dd1-72e3-4dfd-98d6-08da482b075b"),
+                            Id = new Guid("2b19fa35-507a-49c5-b3a1-4c0c8546d738"),
                             Age = 0,
                             CompanyId = new Guid("87654321-4321-4321-4321-210987654321"),
                             Name = "Jurgen Feller",
@@ -119,7 +122,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6a267b6d-4131-4cb2-ab5d-87d7ed492bb9"),
+                            Id = new Guid("68845530-a4fa-4b24-b046-c73993942c9a"),
                             Age = 0,
                             CompanyId = new Guid("87654321-4321-4321-4321-210987654321"),
                             Name = "Mathias Vogel",
@@ -147,9 +150,11 @@ namespace CompanyEmployees.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -174,12 +179,6 @@ namespace CompanyEmployees.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

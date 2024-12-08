@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,11 @@ using Repository;
 namespace CompanyEmployees.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241205195301_Third_Identity")]
+    partial class Third_Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +98,7 @@ namespace CompanyEmployees.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("19cc77db-ca82-4566-b0e3-ecd99f1cc33d"),
+                            Id = new Guid("50d37287-611d-4021-9f41-bf2ac9c558bd"),
                             Age = 0,
                             CompanyId = new Guid("12345678-1234-1234-1234-123456789012"),
                             Name = "Indiana Jones",
@@ -103,7 +106,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e5da6688-886c-4adc-a6dd-adac23897117"),
+                            Id = new Guid("d35ed872-fdf7-4b71-b735-7c236f423c98"),
                             Age = 0,
                             CompanyId = new Guid("12345678-1234-1234-1234-123456789012"),
                             Name = "Lara Croft",
@@ -111,7 +114,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("39534dd1-72e3-4dfd-98d6-08da482b075b"),
+                            Id = new Guid("b91e7411-6b67-4843-a0ef-45c6f5635797"),
                             Age = 0,
                             CompanyId = new Guid("87654321-4321-4321-4321-210987654321"),
                             Name = "Jurgen Feller",
@@ -119,7 +122,7 @@ namespace CompanyEmployees.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6a267b6d-4131-4cb2-ab5d-87d7ed492bb9"),
+                            Id = new Guid("03806c60-7201-4b2f-9e54-2829c7948dbf"),
                             Age = 0,
                             CompanyId = new Guid("87654321-4321-4321-4321-210987654321"),
                             Name = "Mathias Vogel",
@@ -147,9 +150,11 @@ namespace CompanyEmployees.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -174,12 +179,6 @@ namespace CompanyEmployees.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -229,20 +228,6 @@ namespace CompanyEmployees.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "012985c0-ab54-4019-835f-70a7b2126c96",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "43a17aad-0e87-48ef-80b6-f6effbc7ef57",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

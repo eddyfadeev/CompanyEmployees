@@ -25,6 +25,11 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureResponseCaching();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.AddJwtConfiguration(builder.Configuration);
+builder.Services.ConfigureSwagger();
 
 builder.Services.Configure<ApiBehaviorOptions>(options => 
     options.SuppressModelStateInvalidFilter = true);
@@ -68,7 +73,14 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseCors("CorsPolicy");
 app.UseResponseCaching();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(s => 
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Company Employees Manager v1");
+});
 
 app.MapControllers();
 
